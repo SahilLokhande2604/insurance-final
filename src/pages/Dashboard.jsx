@@ -66,7 +66,7 @@ export function Dashboard() {
     },
     {
       name: 'Total Coverage',
-      value: `$${userPolicies
+      value: `₹${userPolicies
         .reduce((sum, p) => sum + p.policy.coverageAmount, 0)
         .toLocaleString()}`,
       icon: TrendingUp,

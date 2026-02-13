@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react';
-import {
-  Shield,
-  Plus,
-  Edit,
-  Trash2,
-  Loader2,
-  Search,
-} from 'lucide-react';
-import { policyApi } from '../../api/policyApi';
-import { Modal } from '../../components/Modal';
+import { Shield, Plus, Edit, Trash2, Loader2, Search } from 'lucide-react';
+import { policyApi } from '../../api/policyApi.js';
+import { Modal } from '../../components/Modal.jsx';
 
 const policyTypes = [
   'Health Insurance',
@@ -89,24 +82,16 @@ export function AdminPolicies() {
         coverageAmount: parseFloat(formData.coverageAmount),
         premium: parseFloat(formData.premium),
         duration: formData.duration,
-        features: formData.features
-          .split(',')
-          .map((f) => f.trim())
-          .filter((f) => f),
+        features: formData.features.split(',').map(f => f.trim()).filter(f => f),
         isActive: true,
       };
 
       if (editingPolicy) {
-        const updated = await policyApi.updatePolicy(
-          editingPolicy.id,
-          policyData
-        );
-        setPolicies((prev) =>
-          prev.map((p) => (p.id === editingPolicy.id ? updated : p))
-        );
+        const updated = await policyApi.updatePolicy(editingPolicy.id, policyData);
+        setPolicies(prev => prev.map(p => p.id === editingPolicy.id ? updated : p));
       } else {
         const newPolicy = await policyApi.createPolicy(policyData);
-        setPolicies((prev) => [...prev, newPolicy]);
+        setPolicies(prev => [...prev, newPolicy]);
       }
 
       setShowForm(false);
@@ -119,19 +104,18 @@ export function AdminPolicies() {
 
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this policy?')) return;
-
+    
     try {
       await policyApi.deletePolicy(id);
-      setPolicies((prev) => prev.filter((p) => p.id !== id));
+      setPolicies(prev => prev.filter(p => p.id !== id));
     } catch (error) {
       console.error('Failed to delete policy:', error);
     }
   };
 
-  const filteredPolicies = policies.filter(
-    (policy) =>
-      policy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      policy.type.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPolicies = policies.filter(policy =>
+    policy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    policy.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (isLoading) {
@@ -151,7 +135,7 @@ export function AdminPolicies() {
           <p className="text-gray-500">Create and manage insurance policies</p>
         </div>
         <button
-          onClick={() => handleOpenForm()}
+          onClick={() => handleOpenForm(null)}
           className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700"
         >
           <Plus className="h-4 w-4" />
@@ -380,3 +364,5 @@ export function AdminPolicies() {
     </div>
   );
 }
+
+export default AdminPolicies;

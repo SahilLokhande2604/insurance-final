@@ -1,30 +1,32 @@
-import { dummyClaims } from '../utils/dummyData';
+import axiosInstance from './axiosInstance.js';
+import { dummyClaims } from '../utils/dummyData.js';
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const USE_DUMMY_DATA = true;
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 let claims = [...dummyClaims];
 
 export const claimApi = {
-  // Get all claims (Admin)
   async getAllClaims() {
     if (USE_DUMMY_DATA) {
       await delay(500);
       return claims;
     }
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.get('/api/claims');
+    return response.data;
   },
 
-  // Get user claims
   async getUserClaims(userId) {
     if (USE_DUMMY_DATA) {
       await delay(500);
       return claims.filter(c => c.userId === userId);
     }
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.get(`/api/claims?userId=${userId}`);
+    return response.data;
   },
 
-  // Get claim by ID
   async getClaimById(id) {
     if (USE_DUMMY_DATA) {
       await delay(300);
@@ -32,10 +34,11 @@ export const claimApi = {
       if (!claim) throw new Error('Claim not found');
       return claim;
     }
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.get(`/api/claims/${id}`);
+    return response.data;
   },
 
-  // Submit new claim
   async submitClaim(data) {
     if (USE_DUMMY_DATA) {
       await delay(800);
@@ -48,16 +51,17 @@ export const claimApi = {
       claims.push(newClaim);
       return newClaim;
     }
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.post('/api/claims', data);
+    return response.data;
   },
 
-  // Process claim (Admin - Approve/Reject)
   async processClaim(id, status) {
     if (USE_DUMMY_DATA) {
       await delay(500);
       const index = claims.findIndex(c => c.id === id);
       if (index === -1) throw new Error('Claim not found');
-
+      
       claims[index] = {
         ...claims[index],
         status,
@@ -65,6 +69,10 @@ export const claimApi = {
       };
       return claims[index];
     }
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.put(`/api/claims/${id}`, { status });
+    return response.data;
   },
 };
+
+export default claimApi;

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Shield, Mail, Lock, Loader2, Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { Shield, User, Lock, Loader2, Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
+import { ROLES } from '../utils/constants.js';
 
 export function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -22,19 +23,22 @@ export function Login() {
     setIsLoading(true);
 
     try {
-      await login(email, password);
-
-      // Check if admin or customer and redirect accordingly
-      const storedUser = localStorage.getItem('insurance_user');
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        const redirectPath =
-          from || (user.role === 'ADMIN' ? '/admin/dashboard' : '/dashboard');
-
-        navigate(redirectPath, { replace: true });
+      const response = await login(username, password);
+      
+      // Redirect based on role
+      let redirectPath = from;
+      
+      if (!redirectPath) {
+        if (response.user.role === ROLES.ADMIN) {
+          redirectPath = '/admin/dashboard';
+        } else {
+          redirectPath = '/dashboard';
+        }
       }
+      
+      navigate(redirectPath, { replace: true });
     } catch (err) {
-      setError(err?.message || 'Login failed');
+      setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }
@@ -66,8 +70,8 @@ export function Login() {
           <div className="mb-6 p-4 bg-indigo-50 rounded-lg border border-indigo-100">
             <p className="text-sm font-medium text-indigo-900 mb-2">Demo Credentials:</p>
             <div className="space-y-1 text-sm text-indigo-700">
-              <p><span className="font-medium">Admin:</span> admin@insurance.com / admin123</p>
-              <p><span className="font-medium">Customer:</span> user@insurance.com / user123</p>
+              <p><span className="font-medium">Admin:</span> admin / password</p>
+              <p><span className="font-medium">User:</span> user / 123456</p>
             </div>
           </div>
 
@@ -82,17 +86,18 @@ export function Login() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Email Address
+                Username
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username"
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                   required
+                  autoComplete="username"
                 />
               </div>
             </div>
@@ -110,6 +115,7 @@ export function Login() {
                   placeholder="Enter your password"
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                   required
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
@@ -194,3 +200,5 @@ export function Login() {
     </div>
   );
 }
+
+export default Login;

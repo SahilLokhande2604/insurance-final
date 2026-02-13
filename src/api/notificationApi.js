@@ -1,23 +1,24 @@
-import { dummyNotifications } from '../utils/dummyData';
+import axiosInstance from './axiosInstance.js';
+import { dummyNotifications } from '../utils/dummyData.js';
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const USE_DUMMY_DATA = true;
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 let notifications = [...dummyNotifications];
 
 export const notificationApi = {
-  // Get user notifications
   async getUserNotifications(userId) {
     if (USE_DUMMY_DATA) {
       await delay(300);
       return notifications
         .filter(n => n.userId === userId)
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     }
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.get(`/api/notifications/user/${userId}`);
+    return response.data;
   },
 
-  // Mark notification as read
   async markAsRead(id) {
     if (USE_DUMMY_DATA) {
       await delay(200);
@@ -26,20 +27,23 @@ export const notificationApi = {
       notifications[index].isRead = true;
       return notifications[index];
     }
-    throw new Error('API not implemented');
+    
+    console.warn('markAsRead: Backend endpoint not implemented');
+    return null;
   },
 
-  // Mark all as read
   async markAllAsRead(userId) {
     if (USE_DUMMY_DATA) {
       await delay(200);
-      notifications = notifications.map(n =>
+      notifications = notifications.map(n => 
         n.userId === userId ? { ...n, isRead: true } : n
       );
+      return;
     }
+    
+    console.warn('markAllAsRead: Backend endpoint not implemented');
   },
 
-  // Create notification
   async createNotification(data) {
     if (USE_DUMMY_DATA) {
       await delay(200);
@@ -52,22 +56,30 @@ export const notificationApi = {
       notifications.unshift(newNotification);
       return newNotification;
     }
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.post('/api/notifications/send', {
+      userId: data.userId,
+      message: data.message,
+      type: data.type || 'in-app',
+      status: 'sent',
+    });
+    return response.data;
   },
 
-  // Send notification to user (Admin)
   async sendNotification(data) {
     return this.createNotification(data);
   },
 
-  // Get unread count
   async getUnreadCount(userId) {
     if (USE_DUMMY_DATA) {
       await delay(100);
-      return notifications.filter(
-        n => n.userId === userId && !n.isRead
-      ).length;
+      return notifications.filter(n => n.userId === userId && !n.isRead).length;
     }
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.get(`/api/notifications/user/${userId}`);
+    const notifications = response.data;
+    return notifications.filter(n => n.status !== 'read').length;
   },
 };
+
+export default notificationApi;

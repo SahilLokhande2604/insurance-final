@@ -1,5 +1,5 @@
 import { Shield, Check, ArrowRight } from 'lucide-react';
-import { cn } from '../utils/cn';
+import { cn } from '../utils/cn.js';
 
 const policyTypeColors = {
   'Health Insurance': 'bg-green-100 text-green-700',
@@ -21,12 +21,10 @@ export function PolicyCard({
       {/* Header */}
       <div className="p-6 pb-4">
         <div className="flex items-start justify-between mb-4">
-          <div
-            className={cn(
-              'px-3 py-1 rounded-full text-xs font-medium',
-              policyTypeColors[policy.type] || 'bg-gray-100 text-gray-700'
-            )}
-          >
+          <div className={cn(
+            'px-3 py-1 rounded-full text-xs font-medium',
+            policyTypeColors[policy.type] || 'bg-gray-100 text-gray-700'
+          )}>
             {policy.type}
           </div>
           {isPurchased && (
@@ -79,8 +77,7 @@ export function PolicyCard({
           <div className="text-right">
             <p className="text-xs text-gray-500">Premium</p>
             <p className="text-lg font-bold text-indigo-600">
-              ${policy.premium}
-              <span className="text-sm font-normal text-gray-500">/mo</span>
+              ${policy.premium}<span className="text-sm font-normal text-gray-500">/mo</span>
             </p>
           </div>
         </div>
@@ -110,3 +107,5 @@ export function PolicyCard({
     </div>
   );
 }
+
+export default PolicyCard;

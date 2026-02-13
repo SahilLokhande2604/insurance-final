@@ -1,112 +1,110 @@
-import { dummyUsers } from '../utils/dummyData';
+import axiosInstance from './axiosInstance.js';
+import { dummyUsers } from '../utils/dummyData.js';
+import { getUserFromToken } from '../utils/jwtUtils.js';
 
-// Simulate API delay
+const USE_DUMMY_DATA = true;
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Flag to switch between dummy and real API
-const USE_DUMMY_DATA = true;
-
+// Use named export to match your import style
 export const authApi = {
-  // Login
-  async login(email, password) {
+  async login(username, password) {
     if (USE_DUMMY_DATA) {
       await delay(800);
+      
       const user = dummyUsers.find(
-        (u) => u.email === email && u.password === password
+        u => (u.email === username || u.username === username) && u.password === password
       );
-
+      
       if (!user) {
-        throw new Error('Invalid email or password');
+        throw new Error('Invalid credentials');
       }
-
-      const { password: _, ...userData } = user;
+      
+      const userData = {
+        username: user.username || user.email.split('@')[0],
+        role: user.role === 'ADMIN' ? 'ROLE_ADMIN' : 'ROLE_USER',
+        name: user.name,
+        email: user.email,
+      };
+      
       return {
         user: userData,
-        token: `dummy-jwt-token-${user.id}-${Date.now()}`,
+        token: `dummy-jwt-token-${Date.now()}`,
       };
     }
-
-    // Real API call (uncomment when backend is ready)
-    // const response = await axiosInstance.post('/auth/login', { email, password });
-    // return response.data;
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.post('/api/users/login', {
+      username,
+      password,
+    });
+    
+    const token = response.data;
+    
+    if (!token || typeof token !== 'string') {
+      throw new Error('Invalid response from server');
+    }
+    
+    const userInfo = getUserFromToken(token);
+    
+    if (!userInfo) {
+      throw new Error('Invalid token received');
+    }
+    
+    return {
+      user: {
+        username: userInfo.username,
+        role: userInfo.role,
+        name: userInfo.username,
+      },
+      token,
+    };
   },
 
-  // Register
   async register(data) {
     if (USE_DUMMY_DATA) {
       await delay(800);
-
-      // Check if email already exists
-      if (dummyUsers.some((u) => u.email === data.email)) {
-        throw new Error('Email already registered');
+      
+      const exists = dummyUsers.some(
+        u => u.email === data.username || u.username === data.username
+      );
+      
+      if (exists) {
+        throw new Error('Username already exists');
       }
-
-      const newUser = {
-        id: `user-${Date.now()}`,
-        email: data.email,
-        name: data.name,
-        role: 'CUSTOMER',
-        phone: data.phone,
-        createdAt: new Date().toISOString(),
-      };
-
+      
       return {
-        user: newUser,
-        token: `dummy-jwt-token-${newUser.id}`,
+        success: true,
+        message: 'User registered successfully',
       };
     }
-
-    // Real API call
-    // const response = await axiosInstance.post('/auth/register', data);
-    // return response.data;
-    throw new Error('API not implemented');
+    
+    const response = await axiosInstance.post('/api/users/register', {
+      username: data.username,
+      password: data.password,
+    });
+    
+    return {
+      success: true,
+      message: response.data || 'User registered successfully',
+    };
   },
 
-  // Get current user
-  async getCurrentUser(token) {
-    if (USE_DUMMY_DATA) {
-      await delay(300);
-      const userId = token.split('-')[3];
-      const user = dummyUsers.find((u) => u.id === userId);
-
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      const { password: _, ...userData } = user;
-      return userData;
-    }
-
-    // Real API call
-    // const response = await axiosInstance.get('/auth/me');
-    // return response.data;
-    throw new Error('API not implemented');
-  },
-
-  // Logout
   async logout() {
-    if (USE_DUMMY_DATA) {
-      await delay(200);
-      return;
-    }
-
-    // Real API call
-    // await axiosInstance.post('/auth/logout');
+    await delay(200);
+    return;
   },
 
-  // Get all users (Admin only)
   async getAllUsers() {
     if (USE_DUMMY_DATA) {
       await delay(500);
       return dummyUsers
-        .filter((u) => u.role === 'CUSTOMER')
-        .map(({ password: _, ...user }) => user);
+        .filter(u => u.role === 'CUSTOMER' || u.role === 'ROLE_USER')
+        .map(({ password, ...user }) => user);
     }
-
-    // Real API call
-    // const response = await axiosInstance.get('/admin/users');
-    // return response.data;
-    throw new Error('API not implemented');
+    
+    console.warn('getAllUsers: Backend endpoint not implemented yet');
+    return [];
   },
 };
+
+// Also export as default for compatibility
+export default authApi;

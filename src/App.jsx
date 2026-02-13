@@ -1,9 +1,13 @@
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { NotificationProvider } from './context/NotificationContext';
-import { AppRoutes } from './routes/AppRoutes';
+import { AuthProvider } from './context/AuthContext.jsx';
+import { NotificationProvider } from './context/NotificationContext.jsx';
+import { AppRoutes } from './routes/AppRoutes.jsx';
 
-export default function App() {
+/**
+ * Main App Component
+ * Sets up providers and routing
+ */
+export function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -14,3 +18,5 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+export default App;

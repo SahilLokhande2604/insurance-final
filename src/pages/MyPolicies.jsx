@@ -1,28 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Shield,
-  Calendar,
-  CheckCircle,
-  AlertTriangle,
-  ArrowRight,
-  Loader2,
-} from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { policyApi } from '../api/policyApi';
-import { cn } from '../utils/cn';
+import { Shield, Calendar, CheckCircle, AlertTriangle, ArrowRight, Loader2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
+import { policyApi } from '../api/policyApi.js';
+import { cn } from '../utils/cn.js';
 
 export function MyPolicies() {
   const { user } = useAuth();
   const [userPolicies, setUserPolicies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const userId = user?.id || user?.username || '2';
+
   useEffect(() => {
     const fetchData = async () => {
-      if (!user) return;
-
       try {
-        const data = await policyApi.getUserPolicies(user.id);
+        const data = await policyApi.getUserPolicies(userId);
         setUserPolicies(data);
       } catch (error) {
         console.error('Failed to fetch policies:', error);
@@ -32,14 +25,12 @@ export function MyPolicies() {
     };
 
     fetchData();
-  }, [user]);
+  }, [userId]);
 
   const isExpiringSoon = (expiryDate) => {
     const expiry = new Date(expiryDate);
     const now = new Date();
-    const daysUntilExpiry = Math.ceil(
-      (expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    const daysUntilExpiry = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     return daysUntilExpiry <= 30 && daysUntilExpiry > 0;
   };
 
@@ -174,3 +165,5 @@ export function MyPolicies() {
     </div>
   );
 }
+
+export default MyPolicies;

@@ -1,10 +1,10 @@
-// API Base URL - Change this when connecting to real backend
-export const API_BASE_URL = 'http://localhost:8080/api';
+// API Base URL - Spring Boot backend
+export const API_BASE_URL = 'http://localhost:8080';
 
-// User Roles
+// User Roles (matching backend)
 export const ROLES = {
-  ADMIN: 'ADMIN',
-  CUSTOMER: 'CUSTOMER',
+  ADMIN: 'ROLE_ADMIN',
+  USER: 'ROLE_USER',
 };
 
 // Claim Status
