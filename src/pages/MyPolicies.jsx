@@ -26,6 +26,31 @@ export function MyPolicies() {
 
     fetchData();
   }, [userId]);
+  
+  
+// React.useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       // Get userId first
+//       const userId = localStorage.getItem("userId") || 
+//                      await userApi.getUserIdByUsername(currentUser.username);
+
+//       // Fetch claims using userId
+//       const claims = await claimApi.getUserClaims(userId);
+//       setClaims(claims);
+
+//       // Fetch policies using userId
+//       const policies = await policyApi.getUserPolicies(userId);
+//       setPolicies(policies);
+
+//     } catch (error) {
+//       console.error("Failed to fetch data:", error);
+//     }
+//   };
+
+//   if(currentUser?.username) fetchData();
+// }, [currentUser]);
+
 
   const isExpiringSoon = (expiryDate) => {
     const expiry = new Date(expiryDate);
