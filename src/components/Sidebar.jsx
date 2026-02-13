@@ -20,6 +20,7 @@ const customerNavItems = [
   { name: 'Claims', href: '/claims', icon: ClipboardList },
   { name: 'Payments', href: '/payments', icon: CreditCard },
   { name: 'Notifications', href: '/notifications', icon: Bell },
+  { name: 'Support', href: '/support', icon: ClipboardList },
 ];
 
 const adminNavItems = [

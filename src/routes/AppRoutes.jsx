@@ -14,6 +14,7 @@ import { MyPolicies } from '../pages/MyPolicies';
 import { Claims } from '../pages/Claims';
 import { Payments } from '../pages/Payments';
 import { Notifications } from '../pages/Notifications';
+import Support from '../pages/Support';
 
 // Admin Pages
 import { AdminDashboard } from '../pages/admin/AdminDashboard';
@@ -92,6 +93,7 @@ export function AppRoutes() {
         <Route path="/claims" element={<Claims />} />
         <Route path="/payments" element={<Payments />} />
         <Route path="/notifications" element={<Notifications />} />
+        <Route path="/support" element={<Support />} />
       </Route>
 
       {/* Admin routes */}

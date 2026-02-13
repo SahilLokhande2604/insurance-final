@@ -194,28 +194,48 @@ export function Policies() {
   ];
 
   // ⚠️ Backend expects Long userId
-  const userId = user?.id ? Number(user.id) : 2;
+  // const userId = user?.id ? Number(user.id) : 2;
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const allPolicies = await policyApi.getAllPolicies();
+  //       setPolicies(allPolicies);
+
+  //       // fetch user policies only if userId exists
+  //       if (userId) {
+  //         const myPolicies = await policyApi.getUserPolicies(userId);
+  //         setUserPolicies(myPolicies);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch policies:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [userId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const allPolicies = await policyApi.getAllPolicies();
-        setPolicies(allPolicies);
+  const fetchData = async () => {
+    try {
+      const allPolicies = await policyApi.getAllPolicies();
+      setPolicies(allPolicies);
 
-        // fetch user policies only if userId exists
-        if (userId) {
-          const myPolicies = await policyApi.getUserPolicies(userId);
-          setUserPolicies(myPolicies);
-        }
-      } catch (error) {
-        console.error("Failed to fetch policies:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      const myPolicies = await policyApi.getUserPolicies();
+      setUserPolicies(myPolicies);
 
-    fetchData();
-  }, [userId]);
+    } catch (error) {
+      console.error("Failed to fetch policies:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
 
   // ✅ MATCHING BACKEND FIELDS
   const filteredPolicies = policies.filter((policy) => {
@@ -243,10 +263,14 @@ export function Policies() {
   const handlePaymentComplete = async (success) => {
     if (success && selectedPolicy) {
       try {
+        // const result = await policyApi.purchasePolicy(
+        //   userId,
+        //   selectedPolicy.id
+        // );
         const result = await policyApi.purchasePolicy(
-          userId,
-          selectedPolicy.id
+        selectedPolicy.id
         );
+
 
         setUserPolicies((prev) => [...prev, result]);
 

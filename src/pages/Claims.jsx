@@ -437,14 +437,21 @@ export function Claims() {
       // Get userId from localStorage (already fetched)
       const userId = localStorage.getItem('userId');
 
+      // const newClaim = await claimApi.submitClaim({
+      //   userPolicyId: formData.userPolicyId,
+      //   userId: userId,
+      //   userName: user.name || user.username,
+      //   policyName: selectedPolicy.policy.name,
+      //   description: formData.description,
+      //   amount: parseFloat(formData.amount),
+      // });
       const newClaim = await claimApi.submitClaim({
-        userPolicyId: formData.userPolicyId,
-        userId: userId,
-        userName: user.name || user.username,
-        policyName: selectedPolicy.policy.name,
-        description: formData.description,
-        amount: parseFloat(formData.amount),
-      });
+  customerId: Number(userId),
+  policyName: selectedPolicy.policy.name,
+  description: formData.description,
+  amount: Number(formData.amount)
+});
+
 
       setClaims((prev) => [newClaim, ...prev]);
 
