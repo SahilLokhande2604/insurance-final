@@ -14,6 +14,7 @@ import { useAuth } from '../context/AuthContext';
 import { policyApi } from '../api/policyApi';
 import { claimApi } from '../api/claimApi';
 import { cn } from '../utils/cn';
+import { getUserFromToken } from "../utils/jwtUtils";
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -21,59 +22,119 @@ export function Dashboard() {
   const [claims, setClaims] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+const token = localStorage.getItem("token");
+const loggedInUser = token ? getUserFromToken(token) : null;
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (!loggedInUser) return;
+
+  //     try {
+  //       const [policiesData, claimsData] = await Promise.all([
+  //         policyApi.getMyPolicies(loggedInUser.username),
+  //         claimApi.getUserClaims(loggedInUser.username),
+  //       ]);
+  //       setUserPolicies(policiesData);
+  //       setClaims(claimsData);
+  //     } catch (error) {
+  //       console.error('Failed to fetch dashboard data:', error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [loggedInUser]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      if (!user) return;
+  const fetchData = async () => {
+    if (!loggedInUser) return;
 
-      try {
-        const [policiesData, claimsData] = await Promise.all([
-          policyApi.getUserPolicies(user.id),
-          claimApi.getUserClaims(user.id),
-        ]);
-        setUserPolicies(policiesData);
-        setClaims(claimsData);
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    try {
+      const [policiesData, claimsData] = await Promise.all([
+        policyApi.getMyPolicies(loggedInUser.username),
+        claimApi.getUserClaims(loggedInUser.username),
+      ]);
 
-    fetchData();
-  }, [user]);
+      setUserPolicies(policiesData);
+      setClaims(claimsData);
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchData();
+}, [loggedInUser]);
+
+
+  // const stats = [
+  //   {
+  //     name: 'Active Policies',
+  //     value: userPolicies.filter((p) => p.isActive).length,
+  //     icon: Shield,
+  //     color: 'bg-indigo-500',
+  //     bgColor: 'bg-indigo-50',
+  //   },
+  //   {
+  //     name: 'Pending Claims',
+  //     value: claims.filter((c) => c.status === 'PENDING').length,
+  //     icon: Clock,
+  //     color: 'bg-yellow-500',
+  //     bgColor: 'bg-yellow-50',
+  //   },
+  //   {
+  //     name: 'Approved Claims',
+  //     value: claims.filter((c) => c.status === 'APPROVED').length,
+  //     icon: CheckCircle,
+  //     color: 'bg-green-500',
+  //     bgColor: 'bg-green-50',
+  //   },
+  //   {
+  //     name: 'Total Coverage',
+  //     value: `₹${userPolicies
+  //       .reduce((sum, p) => sum + p.policy.coverageAmount, 0)
+  //       .toLocaleString()}`,
+  //     icon: TrendingUp,
+  //     color: 'bg-purple-500',
+  //     bgColor: 'bg-purple-50',
+  //   },
+  // ];
 
   const stats = [
-    {
-      name: 'Active Policies',
-      value: userPolicies.filter((p) => p.isActive).length,
-      icon: Shield,
-      color: 'bg-indigo-500',
-      bgColor: 'bg-indigo-50',
-    },
-    {
-      name: 'Pending Claims',
-      value: claims.filter((c) => c.status === 'PENDING').length,
-      icon: Clock,
-      color: 'bg-yellow-500',
-      bgColor: 'bg-yellow-50',
-    },
-    {
-      name: 'Approved Claims',
-      value: claims.filter((c) => c.status === 'APPROVED').length,
-      icon: CheckCircle,
-      color: 'bg-green-500',
-      bgColor: 'bg-green-50',
-    },
-    {
-      name: 'Total Coverage',
-      value: `₹${userPolicies
-        .reduce((sum, p) => sum + p.policy.coverageAmount, 0)
-        .toLocaleString()}`,
-      icon: TrendingUp,
-      color: 'bg-purple-500',
-      bgColor: 'bg-purple-50',
-    },
-  ];
+  {
+    name: 'Active Policies',
+    value: userPolicies.filter((p) => p.status === 'ACTIVE').length,
+    icon: Shield,
+    color: 'bg-indigo-500',
+    bgColor: 'bg-indigo-50',
+  },
+  {
+    name: 'Pending Claims',
+    value: claims.filter((c) => c.status === 'PENDING').length,
+    icon: Clock,
+    color: 'bg-yellow-500',
+    bgColor: 'bg-yellow-50',
+  },
+  {
+    name: 'Approved Claims',
+    value: claims.filter((c) => c.status === 'APPROVED').length,
+    icon: CheckCircle,
+    color: 'bg-green-500',
+    bgColor: 'bg-green-50',
+  },
+  {
+    name: 'Total Coverage',
+    value: `₹${userPolicies
+      .reduce((sum, p) => sum + p.policy.coverageAmount, 0)
+      .toLocaleString()}`,
+    icon: TrendingUp,
+    color: 'bg-purple-500',
+    bgColor: 'bg-purple-50',
+  },
+];
+
 
   if (isLoading) {
     return (
@@ -82,6 +143,14 @@ export function Dashboard() {
       </div>
     );
   }
+  if (!loggedInUser) {
+  return (
+    <div className="text-center py-20">
+      <p className="text-gray-500">No user logged in.</p>
+    </div>
+  );
+}
+
 
   return (
     <div className="space-y-6">

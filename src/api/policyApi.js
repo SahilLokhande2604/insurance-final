@@ -289,8 +289,13 @@
 // };
 
 // export default policyApi;
-
+import { getUserFromToken } from "../utils/jwtUtils";
 import axiosInstance from "./axiosInstance.js";
+
+
+const token = localStorage.getItem("token");
+const loggedInUser = token ? getUserFromToken(token) : null;
+
 
 export const policyApi = {
 
@@ -326,14 +331,30 @@ export const policyApi = {
   // USER POLICY APIs (JWT BASED)
   // =========================
 
-  async getUserPolicies() {
-    const response = await axiosInstance.get("http://localhost:8085/api/user-policies/my-policies", {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`
-  }
-});
+//   async getUserPolicies() {
+//     const response = await axiosInstance.get("http://localhost:8085/api/user-policies/my-policies", {
+//   headers: {
+//     Authorization: `Bearer ${localStorage.getItem("token")}`
+//   }
+// });
+//     return response.data;
+//   },
+async getMyPolicies(username) {
+    if (!username) throw new Error("Username is required");
+
+    const response = await axiosInstance.get(
+      "http://localhost:8085/api/policies/my",
+      {
+        headers: {
+          "X-USERNAME": username, // send username from component
+        },
+      }
+    );
+
     return response.data;
   },
+
+
 
   async purchasePolicy(policyId) {
     const response = await axiosInstance.post(
@@ -356,7 +377,10 @@ export const policyApi = {
       `/api/payments/my-payments`
     );
     return response.data;
-  }
+  },
+
+
+
 
 };
 

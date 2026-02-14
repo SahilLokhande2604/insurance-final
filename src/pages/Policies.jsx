@@ -171,7 +171,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { useNotifications } from "../context/NotificationContext.jsx";
 import { PolicyCard } from "../components/PolicyCard.jsx";
 import { PaymentModal } from "../components/PaymentModal.jsx";
-
+import { getUserFromToken } from "../utils/jwtUtils";
 export function Policies() {
   const { user } = useAuth();
   const { addNotification } = useNotifications();
@@ -217,13 +217,17 @@ export function Policies() {
   //   fetchData();
   // }, [userId]);
 
+  const token = localStorage.getItem("token");
+  const loggedInUser = token ? getUserFromToken(token) : null;
+  
+
   useEffect(() => {
   const fetchData = async () => {
     try {
       const allPolicies = await policyApi.getAllPolicies();
       setPolicies(allPolicies);
 
-      const myPolicies = await policyApi.getUserPolicies();
+      const myPolicies = await policyApi.getMyPolicies();
       setUserPolicies(myPolicies);
 
     } catch (error) {
@@ -260,39 +264,70 @@ export function Policies() {
     setShowPaymentModal(true);
   };
 
+  // const handlePaymentComplete = async (success) => {
+  //   if (success && selectedPolicy) {
+  //     try {
+  //       // const result = await policyApi.purchasePolicy(
+  //       //   userId,
+  //       //   selectedPolicy.id
+  //       // );
+  //       // const result = await policyApi.purchasePolicy(
+  //       // selectedPolicy.id
+  //       // );
+  //       const result  = await policyApi.getUserPolicies(); // or navigate to My Policies
+
+
+
+  //       setUserPolicies((prev) => [...prev, result]);
+
+  //       await addNotification({
+  //         title: "Policy Purchased!",
+  //         message: `You have successfully purchased ${selectedPolicy.policyType}.`,
+  //         type: "success",
+  //       });
+  //     } catch (error) {
+  //       console.error("Purchase failed:", error);
+  //     }
+  //   } else if (!success) {
+  //     await addNotification({
+  //       title: "Payment Failed",
+  //       message: "Your payment could not be processed. Please try again.",
+  //       type: "error",
+  //     });
+  //   }
+
+  //   setShowPaymentModal(false);
+  //   setSelectedPolicy(null);
+  // };
+
   const handlePaymentComplete = async (success) => {
-    if (success && selectedPolicy) {
-      try {
-        // const result = await policyApi.purchasePolicy(
-        //   userId,
-        //   selectedPolicy.id
-        // );
-        const result = await policyApi.purchasePolicy(
-        selectedPolicy.id
-        );
+  if (success && selectedPolicy) {
+    try {
+      // ✅ Just refresh policies from backend
+      const policies = await policyApi.getUserPolicies();
 
+      setUserPolicies(policies);
 
-        setUserPolicies((prev) => [...prev, result]);
-
-        await addNotification({
-          title: "Policy Purchased!",
-          message: `You have successfully purchased ${selectedPolicy.policyType}.`,
-          type: "success",
-        });
-      } catch (error) {
-        console.error("Purchase failed:", error);
-      }
-    } else if (!success) {
       await addNotification({
-        title: "Payment Failed",
-        message: "Your payment could not be processed. Please try again.",
-        type: "error",
+        title: "Policy Purchased!",
+        message: `You have successfully purchased ${selectedPolicy.policyType}.`,
+        type: "success",
       });
+    } catch (error) {
+      console.error("Fetching policies failed:", error);
     }
+  } else if (!success) {
+    await addNotification({
+      title: "Payment Failed",
+      message: "Your payment could not be processed. Please try again.",
+      type: "error",
+    });
+  }
 
-    setShowPaymentModal(false);
-    setSelectedPolicy(null);
-  };
+  setShowPaymentModal(false);
+  setSelectedPolicy(null);
+};
+
 
   if (isLoading) {
     return (

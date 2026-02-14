@@ -210,6 +210,7 @@
 //   );
 // }
 
+import { getUserFromToken } from "../utils/jwtUtils";
 
 import { useState } from "react";
 import {
@@ -220,6 +221,10 @@ import {
 } from "lucide-react";
 import { Modal } from "./Modal";
 import axios from "axios";
+
+const token = localStorage.getItem("token");
+const loggedInUser = token ? getUserFromToken(token) : null;
+
 
 export function PaymentModal({
   isOpen,
@@ -249,6 +254,12 @@ export function PaymentModal({
 
   const handlePayment = async () => {
     try {
+      if (!loggedInUser) {
+  alert("User not logged in");
+  setStatus("failed");
+  return;
+}
+
       setStatus("processing");
 
       const loaded = await loadRazorpayScript();
@@ -257,23 +268,21 @@ export function PaymentModal({
         return;
       }
       console.log("Sending payment request:", {
-  razorpayOrderId: "temp",
+  username: loggedInUser.username,
   amount: policy.premiumAmount,
-  currency: "INR"
+  policyId: policy.id
 });
 
       // ✅ 1️⃣ Create Order in Backend
-      const orderResponse = await axios.post(
-        "http://localhost:8085/api/payments/create",
-        {
-          // orderId: policy.id,
-          // userId: 1, // replace with logged-in user id
-          // amount: policy.premium,
-          razorpayOrderId: "temp1",   // backend will generate real one
-          amount: 10000,
-          currency: "INR"
-        }
-      );
+     const orderResponse = await axios.post(
+  "http://localhost:8085/api/payments/create",
+  {
+    username: loggedInUser.username,
+    policyId: policy.id,
+    amount: 10000, // For testing, use a fixed amount (₹100) instead of policy.premiumAmount
+  }
+);
+
 
       const { razorpayOrderId, currency } = orderResponse.data;
 

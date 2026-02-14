@@ -128,7 +128,10 @@ export const authApi = {
 
     localStorage.setItem("token", token);
 
-    const userInfo = getUserFromToken(token);
+     const userInfo = getUserFromToken(token);
+
+  // **Save username in localStorage**
+  localStorage.setItem("username", userInfo.username);
 
     return {
       user: {
