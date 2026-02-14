@@ -34,34 +34,63 @@ export function AdminClaims() {
     fetchData();
   }, []);
 
+  // const handleProcessClaim = async (claimId, status) => {
+  //   setProcessingId(claimId);
+  //   try {
+  //     const updatedClaim = await claimApi.processClaim(claimId, status);
+
+  //     setClaims((prev) =>
+  //       prev.map((c) => (c.id === claimId ? updatedClaim : c))
+  //     );
+
+  //     // Send notification to user
+  //     await notificationApi.sendNotification({
+  //       userId: updatedClaim.userId,
+  //       title:
+  //         status === 'APPROVED'
+  //           ? 'Claim Approved! 🎉'
+  //           : 'Claim Rejected',
+  //       message:
+  //         status === 'APPROVED'
+  //           ? `Your claim for ${updatedClaim.policyName} has been approved. Amount $${updatedClaim.amount.toLocaleString()} will be processed.`
+  //           : `Your claim for ${updatedClaim.policyName} has been rejected. Please contact support for more information.`,
+  //       type: status === 'APPROVED' ? 'success' : 'error',
+  //     });
+  //   } catch (error) {
+  //     console.error('Failed to process claim:', error);
+  //   } finally {
+  //     setProcessingId(null);
+  //   }
+  // };
+
   const handleProcessClaim = async (claimId, status) => {
-    setProcessingId(claimId);
-    try {
-      const updatedClaim = await claimApi.processClaim(claimId, status);
+  setProcessingId(claimId);
+  try {
+    const updatedClaim = await claimApi.processClaim(claimId, status);
 
-      setClaims((prev) =>
-        prev.map((c) => (c.id === claimId ? updatedClaim : c))
-      );
+    setClaims((prev) =>
+      prev.map((c) => (c.claimId === claimId ? updatedClaim : c))
+    );
 
-      // Send notification to user
-      await notificationApi.sendNotification({
-        userId: updatedClaim.userId,
-        title:
-          status === 'APPROVED'
-            ? 'Claim Approved! 🎉'
-            : 'Claim Rejected',
-        message:
-          status === 'APPROVED'
-            ? `Your claim for ${updatedClaim.policyName} has been approved. Amount $${updatedClaim.amount.toLocaleString()} will be processed.`
-            : `Your claim for ${updatedClaim.policyName} has been rejected. Please contact support for more information.`,
-        type: status === 'APPROVED' ? 'success' : 'error',
-      });
-    } catch (error) {
-      console.error('Failed to process claim:', error);
-    } finally {
-      setProcessingId(null);
-    }
-  };
+    await notificationApi.sendNotification({
+      userId: updatedClaim.customerId,
+      title:
+        status === "APPROVED"
+          ? "Claim Approved! 🎉"
+          : "Claim Rejected",
+      message:
+        status === "APPROVED"
+          ? `Your claim for ${updatedClaim.policyName} has been approved. Amount $${updatedClaim.amount.toLocaleString()} will be processed.`
+          : `Your claim for ${updatedClaim.policyName} has been rejected. Please contact support for more info.`,
+      type: status === "APPROVED" ? "success" : "error",
+    });
+  } catch (error) {
+    console.error("Failed to process claim:", error);
+  } finally {
+    setProcessingId(null);
+  }
+};
+
 
   const filteredClaims = claims.filter((claim) => {
     const matchesSearch =
