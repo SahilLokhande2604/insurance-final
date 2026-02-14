@@ -372,12 +372,27 @@ async getMyPolicies(username) {
     return response.data;
   },
 
-  async getUserPayments() {
+  // =========================
+// PAYMENT SERVICE APIs
+// =========================
+async getUserPayments() {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("User not logged in");
+
+    const loggedInUser = getUserFromToken(token);
+    if (!loggedInUser?.username) throw new Error("Invalid user token");
+
     const response = await axiosInstance.get(
-      `/api/payments/my-payments`
+      `/api/payments/my-payments`,
+      {
+        headers: {
+          "X-USERNAME": loggedInUser.username, // send username to backend
+        },
+      }
     );
     return response.data;
-  },
+},
+
 
 
 
