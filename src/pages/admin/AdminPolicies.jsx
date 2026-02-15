@@ -113,10 +113,12 @@ export function AdminPolicies() {
     }
   };
 
-  const filteredPolicies = policies.filter(policy =>
-    policy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    policy.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPolicies = policies.filter(policy => {
+    const name = policy.name ? policy.name.toLowerCase() : '';
+    const type = policy.type ? policy.type.toLowerCase() : '';
+    const search = searchTerm ? searchTerm.toLowerCase() : '';
+    return name.includes(search) || type.includes(search);
+  });
 
   if (isLoading) {
     return (

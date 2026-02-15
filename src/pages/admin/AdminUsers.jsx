@@ -22,11 +22,12 @@ export function AdminUsers() {
     fetchData();
   }, []);
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = users.filter((user) => {
+    const name = user.name ? user.name.toLowerCase() : '';
+    const email = user.email ? user.email.toLowerCase() : '';
+    const search = searchTerm ? searchTerm.toLowerCase() : '';
+    return name.includes(search) || email.includes(search);
+  });
 
   if (isLoading) {
     return (
@@ -58,7 +59,7 @@ export function AdminUsers() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        {/* <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center gap-4">
             <div className="h-12 w-12 bg-green-100 rounded-xl flex items-center justify-center">
               <Calendar className="h-6 w-6 text-green-600" />
@@ -79,7 +80,7 @@ export function AdminUsers() {
               <p className="text-sm text-gray-500">New This Month</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Search */}
@@ -114,17 +115,20 @@ export function AdminUsers() {
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    User
+                    Name
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Email
+                    Username
                   </th>
+                  {/* <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Email
+                  </th> */}
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Phone
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  {/* <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Joined
-                  </th>
+                  </th> */}
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Role
                   </th>
@@ -138,36 +142,35 @@ export function AdminUsers() {
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center">
                           <span className="text-sm font-bold text-white">
-                            {user.name.charAt(0).toUpperCase()}
+                            {user.name ? user.name.charAt(0).toUpperCase() : '?'}
                           </span>
                         </div>
                         <p className="font-medium text-gray-900">
-                          {user.name}
+                          {user.name || 'N/A'}
                         </p>
                       </div>
                     </td>
-
                     <td className="px-6 py-4">
+                      <p className="text-gray-900">{user.username || 'N/A'}</p>
+                    </td>
+                    {/* <td className="px-6 py-4">
                       <div className="flex items-center gap-2 text-gray-600">
                         <Mail className="h-4 w-4 text-gray-400" />
-                        {user.email}
+                        {user.email || 'N/A'}
                       </div>
-                    </td>
-
+                    </td> */}
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2 text-gray-600">
                         <Phone className="h-4 w-4 text-gray-400" />
-                        {user.phone || 'Not provided'}
+                        {user.phoneNo || user.phone || 'Not provided'}
                       </div>
                     </td>
-
-                    <td className="px-6 py-4">
+                    {/* <td className="px-6 py-4">
                       <div className="flex items-center gap-2 text-gray-600">
                         <Calendar className="h-4 w-4 text-gray-400" />
-                        {new Date(user.createdAt).toLocaleDateString()}
+                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                       </div>
-                    </td>
-
+                    </td> */}
                     <td className="px-6 py-4">
                       <span className="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-700 rounded-full">
                         {user.role}

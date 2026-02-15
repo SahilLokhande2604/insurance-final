@@ -294,8 +294,8 @@ import axiosInstance from "./axiosInstance.js";
 
 
 const token = localStorage.getItem("token");
-const loggedInUser = token ? getUserFromToken(token) : null;
-
+const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token).username : null);
+console.log("Logged in user in policyApi:", loggedInUser);
 
 export const policyApi = {
 
@@ -372,27 +372,17 @@ async getMyPolicies(username) {
     return response.data;
   },
 
-  // =========================
-// PAYMENT SERVICE APIs
-// =========================
-async getUserPayments() {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("User not logged in");
-
-    const loggedInUser = getUserFromToken(token);
-    if (!loggedInUser?.username) throw new Error("Invalid user token");
-
+  async getUserPayments() {
     const response = await axiosInstance.get(
       `/api/payments/my-payments`,
       {
         headers: {
-          "X-USERNAME": loggedInUser.username, // send username to backend
+          "X-USERNAME": loggedInUser?.username || "default-user", // send username from component
         },
       }
     );
     return response.data;
-},
-
+  },
 
 
 

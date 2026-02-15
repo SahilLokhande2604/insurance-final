@@ -218,7 +218,7 @@ export function Policies() {
   // }, [userId]);
 
   const token = localStorage.getItem("token");
-  const loggedInUser = token ? getUserFromToken(token) : null;
+  const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token)?.username : null);
   
 
   useEffect(() => {
@@ -227,7 +227,7 @@ export function Policies() {
       const allPolicies = await policyApi.getAllPolicies();
       setPolicies(allPolicies);
 
-      const myPolicies = await policyApi.getMyPolicies();
+      const myPolicies = await policyApi.getMyPolicies(loggedInUser);
       setUserPolicies(myPolicies);
 
     } catch (error) {

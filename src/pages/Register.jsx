@@ -8,6 +8,8 @@ export function Register() {
     username: '',
     password: '',
     confirmPassword: '',
+    name: '',
+    phoneNo: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -48,6 +50,8 @@ export function Register() {
       await register({
         username: formData.username,
         password: formData.password,
+        name: formData.name,
+        phoneNo: formData.phoneNo,
       });
       
       // Redirect to dashboard after successful registration
@@ -120,6 +124,36 @@ export function Register() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                required
+                minLength={2}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phoneNo"
+                value={formData.phoneNo}
+                onChange={handleChange}
+                placeholder="Enter your phone number"
+                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                required
+                pattern="[0-9\-\+\s]{7,15}"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Username

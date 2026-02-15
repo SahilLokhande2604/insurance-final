@@ -146,6 +146,8 @@ export const authApi = {
     const response = await axiosInstance.post("/api/users/register", {
       username: data.username,
       password: data.password,
+      name: data.name,
+      phone: data.phone,
     });
 
     return {
@@ -155,6 +157,12 @@ export const authApi = {
   },
 
   async logout() {
+    // console.log(loggedInUser);
+    console.log(localStorage.getItem("username"));
+    console.log(localStorage.getItem("token"));
+    localStorage.removeItem("username");
+    console.log("username: ", localStorage.getItem("username"));
+    // localStorage.removeItem("username");
     localStorage.removeItem("token");
   },
 
