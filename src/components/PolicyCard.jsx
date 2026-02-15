@@ -159,11 +159,11 @@ export function PolicyCard({
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">
-              {policy.policyNumber}
+              {policy.id}
             </h3>
-            <p className="text-sm text-gray-500">
-              {policy.durationInMonths} Months
-            </p>
+            {/* <p className="text-sm text-gray-500">
+              {policy.durationInMonths ? `${policy.durationInMonths} Months` : 'Duration not specified'}
+            </p> */}
           </div>
         </div>
 
@@ -185,7 +185,7 @@ export function PolicyCard({
           <div className="text-right">
             <p className="text-xs text-gray-500">Premium</p>
             <p className="text-lg font-bold text-indigo-600">
-              ₹{policy.premium}
+              ₹{policy.premiumAmount}
               <span className="text-sm font-normal text-gray-500">
                 /mo
               </span>

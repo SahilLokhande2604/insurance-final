@@ -5,9 +5,7 @@
 // import { useNotifications } from '../context/NotificationContext.jsx';
 // import { PolicyCard } from '../components/PolicyCard.jsx';
 // import { PaymentModal } from '../components/PaymentModal.jsx';
-
-// export function Policies() {
-//   const { user } = useAuth();
+// ...existing code...
 //   const { addNotification } = useNotifications();
   
 //   const [policies, setPolicies] = useState([]);
@@ -183,6 +181,7 @@ export function Policies() {
   const [selectedType, setSelectedType] = useState("all");
   const [selectedPolicy, setSelectedPolicy] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   const policyTypes = [
     "all",
@@ -245,7 +244,7 @@ export function Policies() {
   const filteredPolicies = policies.filter((policy) => {
     const matchesSearch =
       policy.policyType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      policy.policyNumber?.toLowerCase().includes(searchTerm.toLowerCase());
+      policy.id?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesType =
       selectedType === "all" || policy.policyType === selectedType;
@@ -259,10 +258,15 @@ export function Policies() {
     );
   };
 
-  const handlePurchase = (policy) => {
-    setSelectedPolicy(policy);
-    setShowPaymentModal(true);
-  };
+   const handlePurchase = (policy) => {
+     setSelectedPolicy(policy);
+     setShowPaymentModal(true);
+   };
+
+   const handleViewDetails = (policy) => {
+     setSelectedPolicy(policy);
+     setShowDetailsModal(true);
+   };
 
   // const handlePaymentComplete = async (success) => {
   //   if (success && selectedPolicy) {
@@ -401,8 +405,36 @@ export function Policies() {
               policy={policy}
               isPurchased={isPurchased(policy.id)}
               onPurchase={() => handlePurchase(policy)}
+              onViewDetails={() => handleViewDetails(policy)}
             />
           ))}
+        </div>
+      )}
+
+      {/* Details Modal */}
+      {showDetailsModal && selectedPolicy && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full relative">
+            <button
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowDetailsModal(false)}
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-bold mb-2">{selectedPolicy.name || selectedPolicy.id}</h2>
+            <p className="text-gray-600 mb-4">{selectedPolicy.description}</p>
+            {/* <p className="text-sm text-gray-500 mb-2">Duration: {selectedPolicy.durationInMonths} Months</p> */}
+            <p className="text-sm text-gray-500 mb-2">Coverage: ₹{selectedPolicy.coverageAmount?.toLocaleString()}</p>
+            <p className="text-sm text-gray-500 mb-2">Premium: ₹{selectedPolicy.premiumAmount}/mo</p>
+            <div className="mt-4">
+              <button
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                onClick={() => setShowDetailsModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

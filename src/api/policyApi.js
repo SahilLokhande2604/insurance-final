@@ -331,14 +331,6 @@ export const policyApi = {
   // USER POLICY APIs (JWT BASED)
   // =========================
 
-//   async getUserPolicies() {
-//     const response = await axiosInstance.get("http://localhost:8085/api/user-policies/my-policies", {
-//   headers: {
-//     Authorization: `Bearer ${localStorage.getItem("token")}`
-//   }
-// });
-//     return response.data;
-//   },
 async getMyPolicies(username) {
     if (!username) throw new Error("Username is required");
 
@@ -372,12 +364,12 @@ async getMyPolicies(username) {
     return response.data;
   },
 
-  async getUserPayments() {
+  async getUserPayments(username) {
     const response = await axiosInstance.get(
       `/api/payments/my-payments`,
       {
         headers: {
-          "X-USERNAME": loggedInUser?.username || "default-user", // send username from component
+          "X-USERNAME": username || "default-user",
         },
       }
     );

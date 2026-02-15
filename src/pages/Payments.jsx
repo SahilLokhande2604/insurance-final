@@ -17,13 +17,13 @@ export function Payments() {
   const { user } = useAuth();
   const [payments, setPayments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
 
       try {
-        const data = await policyApi.getUserPayments(user.id);
+        const data = await policyApi.getUserPayments(user.username);
         setPayments(data);
       } catch (error) {
         console.error('Failed to fetch payments:', error);

@@ -83,6 +83,7 @@ export function AuthProvider({ children }) {
       setUser(loginResponse.user);
       localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(loginResponse.user));
       localStorage.setItem(STORAGE_KEYS.TOKEN, loginResponse.token);
+      // localStorage.setItem("username", loginResponse.user.username);
       
       return loginResponse;
     } finally {
