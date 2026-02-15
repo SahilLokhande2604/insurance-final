@@ -47,11 +47,11 @@ export function AdminPolicies() {
     if (policy) {
       setEditingPolicy(policy);
       setFormData({
-        name: policy.name,
-        type: policy.type,
+        name: policy.PolicyName,
+        type: policy.policyType,
         description: policy.description,
         coverageAmount: policy.coverageAmount.toString(),
-        premium: policy.premium.toString(),
+        premium: policy.premiumAmount.toString(),
         duration: policy.duration,
         features: policy.features.join(', '),
       });
@@ -76,11 +76,11 @@ export function AdminPolicies() {
 
     try {
       const policyData = {
-        name: formData.name,
-        type: formData.type,
+        PolicyName: formData.name,
+        policyType: formData.type,
         description: formData.description,
         coverageAmount: parseFloat(formData.coverageAmount),
-        premium: parseFloat(formData.premium),
+        premiumAmount: parseFloat(formData.premium),
         duration: formData.duration,
         features: formData.features.split(',').map(f => f.trim()).filter(f => f),
         isActive: true,
@@ -106,6 +106,7 @@ export function AdminPolicies() {
     if (!confirm('Are you sure you want to delete this policy?')) return;
     
     try {
+      console.log('Deleting policy with ID:', id);
       await policyApi.deletePolicy(id);
       setPolicies(prev => prev.filter(p => p.id !== id));
     } catch (error) {

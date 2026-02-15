@@ -25,27 +25,6 @@ export function Dashboard() {
 const token = localStorage.getItem("token");
 const loggedInUser = token ? getUserFromToken(token) : null;
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (!loggedInUser) return;
-
-  //     try {
-  //       const [policiesData, claimsData] = await Promise.all([
-  //         policyApi.getMyPolicies(loggedInUser.username),
-  //         claimApi.getUserClaims(loggedInUser.username),
-  //       ]);
-  //       setUserPolicies(policiesData);
-  //       setClaims(claimsData);
-  //     } catch (error) {
-  //       console.error('Failed to fetch dashboard data:', error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [loggedInUser]);
-
   useEffect(() => {
   const fetchData = async () => {
     if (!loggedInUser) return;
@@ -68,39 +47,6 @@ const loggedInUser = token ? getUserFromToken(token) : null;
   fetchData();
 }, [loggedInUser]);
 
-
-  // const stats = [
-  //   {
-  //     name: 'Active Policies',
-  //     value: userPolicies.filter((p) => p.isActive).length,
-  //     icon: Shield,
-  //     color: 'bg-indigo-500',
-  //     bgColor: 'bg-indigo-50',
-  //   },
-  //   {
-  //     name: 'Pending Claims',
-  //     value: claims.filter((c) => c.status === 'PENDING').length,
-  //     icon: Clock,
-  //     color: 'bg-yellow-500',
-  //     bgColor: 'bg-yellow-50',
-  //   },
-  //   {
-  //     name: 'Approved Claims',
-  //     value: claims.filter((c) => c.status === 'APPROVED').length,
-  //     icon: CheckCircle,
-  //     color: 'bg-green-500',
-  //     bgColor: 'bg-green-50',
-  //   },
-  //   {
-  //     name: 'Total Coverage',
-  //     value: `₹${userPolicies
-  //       .reduce((sum, p) => sum + p.policy.coverageAmount, 0)
-  //       .toLocaleString()}`,
-  //     icon: TrendingUp,
-  //     color: 'bg-purple-500',
-  //     bgColor: 'bg-purple-50',
-  //   },
-  // ];
 
   const stats = [
   {

@@ -9,11 +9,13 @@ import {
   Filter,
 } from 'lucide-react';
 import { claimApi } from '../../api/claimApi';
+import { policyApi } from '../../api/policyApi';
 import { notificationApi } from '../../api/notificationApi';
 import { cn } from '../../utils/cn';
 
 export function AdminClaims() {
   const [claims, setClaims] = useState([]);
+  const [policies, setPolicies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -22,46 +24,20 @@ export function AdminClaims() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await claimApi.getAllClaims();
-        setClaims(data);
+        const [claimsData, policiesData] = await Promise.all([
+          claimApi.getAllClaims(),
+          policyApi.getAllPolicies(),
+        ]);
+        setClaims(claimsData);
+        setPolicies(policiesData);
       } catch (error) {
-        console.error('Failed to fetch claims:', error);
+        console.error('Failed to fetch claims or policies:', error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, []);
-
-  // const handleProcessClaim = async (claimId, status) => {
-  //   setProcessingId(claimId);
-  //   try {
-  //     const updatedClaim = await claimApi.processClaim(claimId, status);
-
-  //     setClaims((prev) =>
-  //       prev.map((c) => (c.id === claimId ? updatedClaim : c))
-  //     );
-
-  //     // Send notification to user
-  //     await notificationApi.sendNotification({
-  //       userId: updatedClaim.userId,
-  //       title:
-  //         status === 'APPROVED'
-  //           ? 'Claim Approved! 🎉'
-  //           : 'Claim Rejected',
-  //       message:
-  //         status === 'APPROVED'
-  //           ? `Your claim for ${updatedClaim.policyName} has been approved. Amount $${updatedClaim.amount.toLocaleString()} will be processed.`
-  //           : `Your claim for ${updatedClaim.policyName} has been rejected. Please contact support for more information.`,
-  //       type: status === 'APPROVED' ? 'success' : 'error',
-  //     });
-  //   } catch (error) {
-  //     console.error('Failed to process claim:', error);
-  //   } finally {
-  //     setProcessingId(null);
-  //   }
-  // };
 
   const handleProcessClaim = async (claimId, status) => {
   setProcessingId(claimId);
@@ -94,12 +70,11 @@ export function AdminClaims() {
 
   const filteredClaims = claims.filter((claim) => {
     const matchesSearch =
-      claim.userName
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      claim.policyName
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      claim.customerUserName
+        ||
+      claim.policyId
+        
+       ;
 
     const matchesStatus =
       statusFilter === 'all' || claim.status === statusFilter;
@@ -235,19 +210,19 @@ export function AdminClaims() {
 
               <tbody className="divide-y divide-gray-100">
                 {filteredClaims.map((claim) => (
-                  <tr key={claim.id} className="hover:bg-gray-50">
+                  <tr key={claim.claimId} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center">
-                          <span className="text-sm font-bold text-white">
-                            {claim.userName
+                          {/* <span className="text-sm font-bold text-white">
+                            {claim.customerUserName
                               .charAt(0)
                               .toUpperCase()}
-                          </span>
+                          </span> */}
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">
-                            {claim.userName}
+                            {claim.customerUsername}
                           </p>
                           <p className="text-sm text-gray-500">
                             {new Date(
@@ -261,7 +236,10 @@ export function AdminClaims() {
                     <td className="px-6 py-4">
                       <div>
                         <p className="font-medium text-gray-900">
-                          {claim.policyName}
+                          {(() => {
+                            const policy = policies.find(p => p.id === claim.policyId);
+                            return policy ? (policy.name || policy.PolicyName || policy.policyName) : claim.policyId;
+                          })()}
                         </p>
                         <p className="text-sm text-gray-500 line-clamp-1 max-w-xs">
                           {claim.description}
@@ -306,7 +284,7 @@ export function AdminClaims() {
                           <button
                             onClick={() =>
                               handleProcessClaim(
-                                claim.id,
+                                claim.claimId,
                                 'APPROVED'
                               )
                             }
@@ -326,7 +304,7 @@ export function AdminClaims() {
                           <button
                             onClick={() =>
                               handleProcessClaim(
-                                claim.id,
+                                claim.claimId,
                                 'REJECTED'
                               )
                             }

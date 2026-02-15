@@ -38,7 +38,7 @@ export function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
 
   const navItems =
-    user?.role === 'ADMIN' ? adminNavItems : customerNavItems;
+    user?.role === 'ROLE_ADMIN' ? adminNavItems : customerNavItems;
 
   return (
     <>
@@ -116,7 +116,7 @@ export function Sidebar({ isOpen, onClose }) {
                 {user?.name}
               </p>
               <p className="text-xs text-gray-500 truncate">
-                {user?.email}
+                {user?.username}
               </p>
             </div>
           </div>
