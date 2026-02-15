@@ -47,13 +47,12 @@ export function AdminPolicies() {
     if (policy) {
       setEditingPolicy(policy);
       setFormData({
-        name: policy.PolicyName,
-        type: policy.policyType,
+        policyName: policy.policyName,
+        policyType: policy.policyType,
         description: policy.description,
         coverageAmount: policy.coverageAmount.toString(),
         premium: policy.premiumAmount.toString(),
         duration: policy.duration,
-        features: policy.features.join(', '),
       });
     } else {
       setEditingPolicy(null);
@@ -76,7 +75,7 @@ export function AdminPolicies() {
 
     try {
       const policyData = {
-        PolicyName: formData.name,
+        policyName: formData.name,
         policyType: formData.type,
         description: formData.description,
         coverageAmount: parseFloat(formData.coverageAmount),
@@ -177,7 +176,7 @@ export function AdminPolicies() {
               <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <span className="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-700 rounded-full">
-                    {policy.type}
+                    {policy.policyType}
                   </span>
                   <div className="flex gap-1">
                     <button
@@ -200,7 +199,7 @@ export function AdminPolicies() {
                     <Shield className="h-6 w-6 text-indigo-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">{policy.name}</h3>
+                    <h3 className="font-semibold text-gray-900">{policy.policyName}</h3>
                     <p className="text-sm text-gray-500">{policy.duration}</p>
                   </div>
                 </div>
@@ -218,7 +217,7 @@ export function AdminPolicies() {
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Premium</p>
-                    <p className="font-semibold text-indigo-600">${policy.premium}/mo</p>
+                    <p className="font-semibold text-indigo-600">${policy.premiumAmount}/mo</p>
                   </div>
                 </div>
               </div>
@@ -302,7 +301,7 @@ export function AdminPolicies() {
               </label>
               <input
                 type="number"
-                value={formData.premium}
+                value={formData.premiumAmount}
                 onChange={(e) => setFormData({ ...formData, premium: e.target.value })}
                 placeholder="99"
                 min="1"

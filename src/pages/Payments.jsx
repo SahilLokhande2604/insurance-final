@@ -17,13 +17,17 @@ export function Payments() {
   const { user } = useAuth();
   const [payments, setPayments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+  const [policies, setPolicies] = useState([]);
+  const username=localStorage.getItem("username") || user?.username || "default-user";  
   useEffect(() => {
     const fetchData = async () => {
-      if (!user) return;
+      if (!username) return;
 
       try {
-        const data = await policyApi.getUserPayments(user.username);
+        const policyData = await policyApi.getAllPolicies();
+        setPolicies(policyData);
+        console.log('Fetched policies:', policyData);
+        const data = await policyApi.getUserPayments(username);
         setPayments(data);
       } catch (error) {
         console.error('Failed to fetch payments:', error);
@@ -33,11 +37,17 @@ export function Payments() {
     };
 
     fetchData();
-  }, [user]);
+  }, [username]);
+
+  // const getPolicyName = (policyId) => {
+  //   const policy = dummyPolicies.find((p) => p.id === policyId);
+  //   return policy?.name || 'Unknown Policy';
+  // };
 
   const getPolicyName = (policyId) => {
-    const policy = dummyPolicies.find((p) => p.id === policyId);
-    return policy?.name || 'Unknown Policy';
+    console.log('Looking up policy name for ID:', policyId);
+    const policy = policies.find((p) => p.id === policyId);
+    return policy ? (policy.name || policy.policyName || policy.PolicyName) : 'Unknown Policy';
   };
 
   const getStatusIcon = (status) => {
@@ -156,7 +166,7 @@ export function Payments() {
                   <tr key={payment.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <span className="font-mono text-sm text-gray-600">
-                        {payment.transactionId}
+                        {payment.orderId}
                       </span>
                     </td>
 

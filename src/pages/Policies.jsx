@@ -1,5 +1,61 @@
-const token = localStorage.getItem("token");
-const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token)?.username : null);
+
+
+import { useState, useEffect } from "react";
+import { Search, Filter, Shield, Loader2 } from "lucide-react";
+import { policyApi } from "../api/policyApi.js";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useNotifications } from "../context/NotificationContext.jsx";
+import { PolicyCard } from "../components/PolicyCard.jsx";
+import { PaymentModal } from "../components/PaymentModal.jsx";
+import { getUserFromToken } from "../utils/jwtUtils";
+export function Policies() {
+  const { user } = useAuth();
+  const { addNotification } = useNotifications();
+
+  const [policies, setPolicies] = useState([]);
+  const [userPolicies, setUserPolicies] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedType, setSelectedType] = useState("all");
+  const [selectedPolicy, setSelectedPolicy] = useState(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+  const policyTypes = [
+    "all",
+    "Health Insurance",
+    "Life Insurance",
+    "Auto Insurance",
+    "Home Insurance",
+    "Travel Insurance",
+  ];
+
+  // ⚠️ Backend expects Long userId
+  // const userId = user?.id ? Number(user.id) : 2;
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const allPolicies = await policyApi.getAllPolicies();
+  //       setPolicies(allPolicies);
+
+  //       // fetch user policies only if userId exists
+  //       if (userId) {
+  //         const myPolicies = await policyApi.getUserPolicies(userId);
+  //         setUserPolicies(myPolicies);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch policies:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [userId]);
+
+  const token = localStorage.getItem("token");
+  const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token)?.username : null);
   
 
   useEffect(() => {

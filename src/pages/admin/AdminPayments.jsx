@@ -14,27 +14,31 @@ import { cn } from '../../utils/cn';
 
 export function AdminPayments() {
   const [payments, setPayments] = useState([]);
+  const [policies, setPolicies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await policyApi.getAllPayments();
-        setPayments(data);
+        const [paymentsData, policiesData] = await Promise.all([
+          policyApi.getAllPayments(),
+          policyApi.getAllPolicies(),
+        ]);
+        setPayments(paymentsData);
+        setPolicies(policiesData);
       } catch (error) {
-        console.error('Failed to fetch payments:', error);
+        console.error('Failed to fetch payments or policies:', error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
   const getPolicyName = (policyId) => {
-    const policy = dummyPolicies.find((p) => p.id === policyId);
-    return policy ? policy.name : 'Unknown Policy';
+    const policy = policies.find((p) => p.id === policyId);
+    return policy ? (policy.name || policy.policyName || policy.PolicyName) : 'Unknown Policy';
   };
 
   const getUserName = (userId) => {
@@ -47,8 +51,8 @@ export function AdminPayments() {
     .reduce((sum, p) => sum + p.amount, 0);
 
   const filteredPayments = payments.filter((payment) => {
-    const userName = getUserName(payment.userId).toLowerCase();
-    const policyName = getPolicyName(payment.policyId).toLowerCase();
+    const userName = payment.username.toLowerCase();
+    const policyName = getPolicyName(payment.policyId);
     return (
       userName.includes(searchTerm.toLowerCase()) ||
       policyName.includes(searchTerm.toLowerCase()) ||
@@ -186,7 +190,7 @@ export function AdminPayments() {
                   <tr key={payment.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <p className="font-mono text-sm text-gray-900">
-                        {payment.transactionId}
+                        {payment.orderId}
                       </p>
                       <p className="text-xs text-gray-500">
                         {new Date(payment.createdAt).toLocaleDateString()}
@@ -197,13 +201,13 @@ export function AdminPayments() {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center">
                           <span className="text-xs font-bold text-white">
-                            {getUserName(payment.userId)
+                            {payment.username
                               .charAt(0)
                               .toUpperCase()}
                           </span>
                         </div>
                         <p className="font-medium text-gray-900">
-                          {getUserName(payment.userId)}
+                          {payment.username}
                         </p>
                       </div>
                     </td>

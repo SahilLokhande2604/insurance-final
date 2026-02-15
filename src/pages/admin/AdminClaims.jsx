@@ -319,10 +319,10 @@ export function AdminClaims() {
                         </div>
                       ) : (
                         <span className="text-sm text-gray-500">
-                          Processed on{' '}
-                          {new Date(
+                          Action Taken{' '}
+                          {/* {new Date(
                             claim.processedAt
-                          ).toLocaleDateString()}
+                          ).toLocaleDateString()} */}
                         </span>
                       )}
                     </td>

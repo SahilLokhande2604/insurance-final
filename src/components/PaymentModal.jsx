@@ -67,7 +67,8 @@ export function PaymentModal({
   {
     username: loggedInUser.username,
     policyId: policy.id,
-    amount: 10000, // For testing, use a fixed amount (₹100) instead of policy.premiumAmount
+    amount: policy.premiumAmount, // For testing, use a fixed amount (₹100) instead of policy.premiumAmount
+    
   }
 );
 
