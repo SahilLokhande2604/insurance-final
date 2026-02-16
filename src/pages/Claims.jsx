@@ -15,9 +15,9 @@ import { policyApi } from "../api/policyApi";
 import { Modal } from "../components/Modal";
 import { cn } from "../utils/cn";
 
-const token = localStorage.getItem("token");
-const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token)?.username : null);
-console.log("Logged in user:", loggedInUser);
+// const token = localStorage.getItem("token");
+// const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token)?.username : null);
+// console.log("Logged in user:", loggedInUser);
 export function Claims() {
   const { user } = useAuth();
   const { addNotification } = useNotifications();
@@ -40,11 +40,11 @@ export function Claims() {
   // Fetch claims and policies
   useEffect(() => {
     const fetchData = async () => {
-      if (!loggedInUser) return;
+      if (!user) return;
       try {
         const [claimsData, policiesData] = await Promise.all([
-          claimApi.getUserClaims(loggedInUser),
-          policyApi.getMyPolicies(loggedInUser),
+          claimApi.getUserClaims(user.username),
+          policyApi.getMyPolicies(user.username),
         ]);
 
         console.log("Fetched claims:", claimsData);
@@ -78,7 +78,7 @@ export function Claims() {
     };
 
     fetchData();
-  }, [loggedInUser]);
+  }, [user.username]);
 
   // Submit claim
   const handleSubmitClaim = async (e) => {
@@ -95,7 +95,7 @@ export function Claims() {
     setIsSubmitting(true);
     try {
       const payload = {
-        customerUsername: loggedInUser,
+        customerUsername: user.username,
         policyId: selectedPolicy.policy.id, // Correct backend ID
         claimType: formData.claimType,
         note: formData.description,
@@ -105,7 +105,7 @@ export function Claims() {
         coverageAmount: Number(formData.coverageAmount),
       };
 
-      const newClaim = await claimApi.submitClaim(payload, loggedInUser);
+      const newClaim = await claimApi.submitClaim(payload, user.username);
 
       // Add new claim to table
       setClaims((prev) => [

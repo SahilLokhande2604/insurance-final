@@ -204,6 +204,7 @@
 //     </div>
 //   );
 // }
+
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -258,6 +259,9 @@ export function AdminDashboard() {
     fetchData();
   }, []);
 
+  const [revenueFilter, setRevenueFilter] = useState("monthly"); 
+// options: daily | monthly | yearly
+
   const totalRevenue = useMemo(() => {
     return payments
       .filter((p) => p.status === "SUCCESS")
@@ -279,13 +283,54 @@ export function AdminDashboard() {
     },
   ];
 
-  const revenueChartData = payments
+  // const revenueChartData = payments
+  //   .filter((p) => p.status === "SUCCESS")
+  //   .slice(0, 6)
+  //   .map((p, i) => ({
+  //     name: `P${i + 1}`,
+  //     revenue: p.amount,
+  //   }));
+const revenueChartData = useMemo(() => {
+  const groupedRevenue = {};
+
+  payments
     .filter((p) => p.status === "SUCCESS")
-    .slice(0, 6)
-    .map((p, i) => ({
-      name: `P${i + 1}`,
-      revenue: p.amount,
+    .forEach((p) => {
+      const date = new Date(p.paymentDate || p.createdAt);
+
+      let key;
+
+      if (revenueFilter === "daily") {
+        key = date.toLocaleDateString(); // 16/2/2026
+      }
+
+      if (revenueFilter === "monthly") {
+        key = date.toLocaleString("default", {
+          month: "short",
+          year: "numeric",
+        }); // Feb 2026
+      }
+
+      if (revenueFilter === "yearly") {
+        key = date.getFullYear().toString(); // 2026
+      }
+
+      if (!groupedRevenue[key]) {
+        groupedRevenue[key] = 0;
+      }
+
+      groupedRevenue[key] += p.amount;
+    });
+
+  return Object.keys(groupedRevenue)
+    .sort((a, b) => new Date(a) - new Date(b))
+    .map((key) => ({
+      name: key,
+      revenue: groupedRevenue[key],
     }));
+}, [payments, revenueFilter]);
+
+
 
   if (isLoading) {
     return (
@@ -360,6 +405,22 @@ export function AdminDashboard() {
           <h2 className="text-lg font-semibold mb-4 text-gray-800">
             Revenue Overview
           </h2>
+          <div className="flex justify-between items-center mb-4">
+  <h2 className="text-lg font-semibold text-gray-800">
+    Revenue Overview
+  </h2>
+
+  <select
+    value={revenueFilter}
+    onChange={(e) => setRevenueFilter(e.target.value)}
+    className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A73E8]"
+  >
+    <option value="daily">Daily</option>
+    <option value="monthly">Monthly</option>
+    <option value="yearly">Yearly</option>
+  </select>
+</div>
+
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={revenueChartData}>
               <CartesianGrid strokeDasharray="3 3" />

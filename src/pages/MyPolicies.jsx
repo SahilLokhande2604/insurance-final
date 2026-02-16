@@ -10,23 +10,26 @@ import {
 } from "lucide-react";
 import { policyApi } from "../api/policyApi.js";
 import { cn } from "../utils/cn.js";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export function MyPolicies() {
   const [userPolicies, setUserPolicies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+   const { user } = useAuth();
 
-  const username = localStorage.getItem("username"); // Ensure this is set on login
+
+  // const username = localStorage.getItem("username"); // Ensure this is set on login
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!username) {
+      if (!user) {
         console.warn("No username found in localStorage");
         setIsLoading(false);
         return;
       }
 
       try {
-        const data = await policyApi.getMyPolicies(username);
+        const data = await policyApi.getMyPolicies(user.username);
         console.log("Fetched policies:", data); // Debug
         setUserPolicies(data);
       } catch (error) {
@@ -37,7 +40,7 @@ export function MyPolicies() {
     };
 
     fetchData();
-  }, [username]);
+  }, [user.username]);
 
   const isExpiringSoon = (expiryDate) => {
     if (!expiryDate) return false;

@@ -238,18 +238,18 @@ export function Payments() {
   const [isLoading, setIsLoading] = useState(true);
   const [policies, setPolicies] = useState([]);
 
-  const username =
-    localStorage.getItem("username") || user?.username || null;
+  // const username =
+  //   localStorage.getItem("username") || user?.username || null;
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!username) return;
+      if (!user) return;
 
       try {
         const policyData = await policyApi.getAllPolicies();
         setPolicies(policyData || []);
 
-        const data = await policyApi.getUserPayments(username);
+        const data = await policyApi.getUserPayments(user.username);
         setPayments(data || []);
       } catch (error) {
         console.error("Failed to fetch payments:", error);
@@ -259,7 +259,7 @@ export function Payments() {
     };
 
     fetchData();
-  }, [username]);
+  }, [user.username]);
 
   const getPolicyName = (policyId) => {
     const policy = policies.find((p) => p.id === policyId);

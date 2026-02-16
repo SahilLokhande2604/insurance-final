@@ -72,6 +72,7 @@ export function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/policies" element={<Policies />} />
       <Route path="/support" element={<Support />} />
+      <Route path="/notifications" element={<Notifications />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
       {/* Customer routes */}
@@ -87,7 +88,7 @@ export function AppRoutes() {
         <Route path="/my-policies" element={<MyPolicies />} />
         <Route path="/claims" element={<Claims />} />
         <Route path="/payments" element={<Payments />} />
-        <Route path="/notifications" element={<Notifications />} />
+        {/* <Route path="/notifications" element={<Notifications />} /> */}
         {/* <Route path="/support" element={<Support />} /> */}
       </Route>
 

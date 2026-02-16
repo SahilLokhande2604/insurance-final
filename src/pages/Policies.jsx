@@ -33,8 +33,8 @@ export function Policies() {
   ];
 
 
-  const token = localStorage.getItem("token");
-  const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token)?.username : null);
+  // const token = localStorage.getItem("token");
+  // const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token)?.username : null);
   
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function Policies() {
       const allPolicies = await policyApi.getAllPolicies();
       setPolicies(allPolicies);
 
-      const myPolicies = await policyApi.getMyPolicies(loggedInUser);
+      const myPolicies = await policyApi.getMyPolicies(user.username);
       setUserPolicies(myPolicies);
 
     } catch (error) {
@@ -89,7 +89,7 @@ export function Policies() {
   if (success && selectedPolicy) {
     try {
       // ✅ Just refresh policies from backend
-      const policies = await policyApi.getUserPolicies();
+      const policies = await policyApi.getMyPolicies(user.username);
 
       setUserPolicies(policies);
 

@@ -1,4 +1,4 @@
-import { getUserFromToken } from "../utils/jwtUtils";
+import { useAuth } from "../context/AuthContext";
 
 import { useState } from "react";
 import {
@@ -10,8 +10,8 @@ import {
 import { Modal } from "./Modal";
 import axios from "axios";
 
-const token = localStorage.getItem("token");
-const loggedInUser = token ? getUserFromToken(token) : null;
+// const token = localStorage.getItem("token");
+// const loggedInUser = token ? getUserFromToken(token) : null;
 
 
 export function PaymentModal({
@@ -21,7 +21,7 @@ export function PaymentModal({
   onPaymentComplete,
 }) {
   const [status, setStatus] = useState("idle");
-
+  const { user } = useAuth();
   if (!policy) return null;
 
   // ✅ Load Razorpay Script Dynamically
@@ -42,7 +42,7 @@ export function PaymentModal({
 
   const handlePayment = async () => {
     try {
-      if (!loggedInUser) {
+      if (!user) {
   alert("User not logged in");
   setStatus("failed");
   return;
@@ -56,7 +56,7 @@ export function PaymentModal({
         return;
       }
       console.log("Sending payment request:", {
-  username: loggedInUser.username,
+  username: user.username,
   amount: policy.premiumAmount,
   policyId: policy.id
 });
@@ -65,7 +65,7 @@ export function PaymentModal({
      const orderResponse = await axios.post(
   "http://localhost:8085/api/payments/create",
   {
-    username: loggedInUser.username,
+    username: user.username,
     policyId: policy.id,
     amount: policy.premiumAmount, // For testing, use a fixed amount (₹100) instead of policy.premiumAmount
     

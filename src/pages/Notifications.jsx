@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
 import { cn } from '../utils/cn';
+import Navbar from '../components/NavbarNew.jsx';
+import Footer from '../components/FooterNew.jsx';
 
 function getNotificationIcon(type) {
   switch (type) {
@@ -60,7 +62,8 @@ export function Notifications() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-12 min-h-screen">
+      <Navbar />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -180,6 +183,7 @@ export function Notifications() {
 
         </div>
       )}
+      <Footer />
     </div>
   );
 }

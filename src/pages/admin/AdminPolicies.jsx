@@ -1144,16 +1144,109 @@ export function AdminPolicies() {
       {/* =============================
           MODAL FORM (premium button style)
       ==============================*/}
+      
+      {/* MODAL FORM */}
       <Modal
         isOpen={showForm}
         onClose={() => setShowForm(false)}
         title={editingPolicy ? "Edit Policy" : "Create Policy"}
         size="lg"
       >
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* FORM FIELDS SAME AS YOURS (fixed premium binding) */}
-          {/* Premium field FIX */}
-          {/* change value={formData.premiumAmount} to value={formData.premium} */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          <input
+            type="text"
+            placeholder="Policy Name"
+            value={formData.name}
+            onChange={(e) =>
+              setFormData({ ...formData, name: e.target.value })
+            }
+            className="w-full border p-2 rounded"
+            required
+          />
+
+          <select
+            value={formData.type}
+            onChange={(e) =>
+              setFormData({ ...formData, type: e.target.value })
+            }
+            className="w-full border p-2 rounded"
+            required
+          >
+            <option value="">Select Type</option>
+            {policyTypes.map((type) => (
+              <option key={type}>{type}</option>
+            ))}
+          </select>
+
+          <textarea
+            placeholder="Description"
+            value={formData.description}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+            className="w-full border p-2 rounded"
+          />
+
+          <input
+            type="number"
+            placeholder="Coverage Amount"
+            value={formData.coverageAmount}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                coverageAmount: e.target.value,
+              })
+            }
+            className="w-full border p-2 rounded"
+            required
+          />
+
+          <input
+            type="number"
+            placeholder="Premium Amount"
+            value={formData.premium}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                premium: e.target.value,
+              })
+            }
+            className="w-full border p-2 rounded"
+            required
+          />
+
+          <input
+            type="text"
+            placeholder="Duration"
+            value={formData.duration}
+            onChange={(e) =>
+              setFormData({ ...formData, duration: e.target.value })
+            }
+            className="w-full border p-2 rounded"
+          />
+
+          <input
+            type="text"
+            placeholder="Features (comma separated)"
+            value={formData.features}
+            onChange={(e) =>
+              setFormData({ ...formData, features: e.target.value })
+            }
+            className="w-full border p-2 rounded"
+          />
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-indigo-600 text-white py-2 rounded-lg"
+          >
+            {isSubmitting
+              ? "Saving..."
+              : editingPolicy
+              ? "Update Policy"
+              : "Create Policy"}
+          </button>
         </form>
       </Modal>
     </div>

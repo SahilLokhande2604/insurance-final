@@ -48,16 +48,19 @@ export default function Home() {
               <p className="text-xl mb-8 opacity-90">
                 Comprehensive coverage plans tailored to protect what matters most. Get started in minutes.
               </p>
-              <div className="flex gap-4">
-                <Button asChild size="lg" variant="primary" className="bg-white text-[#1A73E8] hover:bg-gray-100">
-                  <Link to="#policies">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button asChild size="lg" variant="primary" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-black">
+                  <Link to="/policies">
                     Explore Policies
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10">
+                  
+                <Button asChild size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-black">
                   <Link to="/support">Get Quote</Link>
                 </Button>
+              
+  
               </div>
             </div>
             <div className="hidden md:block">
@@ -186,9 +189,18 @@ export default function Home() {
           <p className="text-xl mb-8 opacity-90">
             Join thousands of satisfied customers who trust SecureLife for their insurance needs
           </p>
-          <Button asChild size="lg" className="bg-white text-[#1A73E8] hover:bg-gray-100">
+          {/* <Button asChild size="lg" className="bg-white text-[#1A73E8] hover:bg-gray-100">
             <Link to="/login">Get Started Today</Link>
-          </Button>
+          </Button> */}
+          <Button
+  asChild
+  size="lg"
+  className="border-2 border-white text-white font-semibold
+               hover:bg-white hover:text-[#1A73E8]
+               hover:scale-105 transition-all duration-300"
+>
+  <Link to="/login">Get Started Today</Link>
+</Button>
         </div>
       </section>
       <Footer />

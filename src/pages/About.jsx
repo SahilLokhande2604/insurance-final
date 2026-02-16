@@ -127,9 +127,18 @@ export default function About() {
           <p className="text-xl mb-8 opacity-90">
             Join thousands who trust SecureLife for comprehensive insurance coverage.
           </p>
-          <Button asChild size="lg" className="bg-white text-[#1A73E8] hover:bg-gray-100">
+          {/* <Button asChild size="lg" className="bg-white text-[#1A73E8] hover:bg-gray-100">
             <Link to="/login">Get Started Today</Link>
-          </Button>
+          </Button> */}
+            <Button
+  asChild
+  size="lg"
+  className="border-2 border-white text-white font-semibold
+               hover:bg-white hover:text-[#1A73E8]
+               hover:scale-105 transition-all duration-300"
+>
+  <Link to="/login">Get Started Today</Link>
+</Button>
         </div>
       </section>
 
