@@ -15,6 +15,7 @@ export function PolicyCard({
   onViewDetails,
   isPurchased = false,
   showActions = true,
+  requireLogin = false,
 }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
@@ -91,12 +92,21 @@ export function PolicyCard({
               </button>
             )}
 
-            {onPurchase && !isPurchased && (
+            {onPurchase && !isPurchased && !requireLogin && (
               <button
                 onClick={onPurchase}
                 className="flex-1 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
               >
                 Purchase
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            )}
+            {requireLogin && (
+              <button
+                onClick={onPurchase}
+                className="flex-1 px-4 py-2 text-sm font-medium text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2"
+              >
+                Login to Purchase
                 <ArrowRight className="h-4 w-4" />
               </button>
             )}

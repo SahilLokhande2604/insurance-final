@@ -1,11 +1,15 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+
 import { useAuth } from '../context/AuthContext';
 import { Layout } from '../components/Layout';
+import { Sidebar } from '../components/Sidebar';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 
 // Public Pages
 import { Login } from '../pages/Login';
 import Register from '../pages/Register';
+import Home from '../pages/Home';
+import About from '../pages/About';
 
 // Customer Pages
 import { Dashboard } from '../pages/Dashboard';
@@ -54,29 +58,20 @@ function NotFound() {
   );
 }
 
-function HomeRedirect() {
-  const { user, isAuthenticated } = useAuth();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (user?.role === 'ADMIN') {
-    return <Navigate to="/admin/dashboard" replace />;
-  }
-
-  return <Navigate to="/dashboard" replace />;
-}
 
 export function AppRoutes() {
   return (
     <Routes>
-      {/* Home redirect */}
-      <Route path="/" element={<HomeRedirect />} />
+      {/* Public Home page */}
+      <Route path="/" element={<Home />} />
 
       {/* Public routes */}
+      <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/policies" element={<Policies />} />
+      <Route path="/support" element={<Support />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
       {/* Customer routes */}
@@ -88,22 +83,45 @@ export function AppRoutes() {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/policies" element={<Policies />} />
+        {/* <Route path="/policies" element={<Policies />} /> */}
         <Route path="/my-policies" element={<MyPolicies />} />
         <Route path="/claims" element={<Claims />} />
         <Route path="/payments" element={<Payments />} />
         <Route path="/notifications" element={<Notifications />} />
-        <Route path="/support" element={<Support />} />
+        {/* <Route path="/support" element={<Support />} /> */}
       </Route>
 
       {/* Admin routes */}
-      <Route
+      {/* <Route
         element={
           <ProtectedRoute allowedRoles={['ADMIN']}>
-            <Layout />
+            <div className="min-h-screen bg-gray-50 flex">
+              <Sidebar isOpen={true} onClose={() => {}} />
+              <main className="flex-1 p-4 sm:p-6 lg:p-8">
+                <Outlet />
+              </main>
+            </div>
           </ProtectedRoute>
         }
-      >
+      > */}
+
+      <Route
+  element={
+    <ProtectedRoute allowedRoles={['ADMIN']}>
+      <div className="min-h-screen bg-gray-50 flex">
+        <Sidebar isOpen={true} onClose={() => {}} />
+
+        {/* Main Content */}
+        <div className="flex-1 lg:ml-64">
+          <main className="p-6 lg:p-10">
+            <Outlet />
+          </main>
+        </div>
+      </div>
+    </ProtectedRoute>
+  }
+>
+
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/policies" element={<AdminPolicies />} />

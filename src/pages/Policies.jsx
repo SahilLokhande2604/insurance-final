@@ -1,5 +1,7 @@
-
-
+import Footer from "../components/FooterNew.jsx";
+// import Navbar from "../components/NavbarNew.jsx";
+// import { useState, useEffect } from "react";
+import Navbar from "../components/NavbarNew.jsx";
 import { useState, useEffect } from "react";
 import { Search, Filter, Shield, Loader2 } from "lucide-react";
 import { policyApi } from "../api/policyApi.js";
@@ -30,29 +32,6 @@ export function Policies() {
     "Travel Insurance",
   ];
 
-  // ⚠️ Backend expects Long userId
-  // const userId = user?.id ? Number(user.id) : 2;
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const allPolicies = await policyApi.getAllPolicies();
-  //       setPolicies(allPolicies);
-
-  //       // fetch user policies only if userId exists
-  //       if (userId) {
-  //         const myPolicies = await policyApi.getUserPolicies(userId);
-  //         setUserPolicies(myPolicies);
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to fetch policies:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [userId]);
 
   const token = localStorage.getItem("token");
   const loggedInUser = localStorage.getItem("username") || (token ? getUserFromToken(token)?.username : null);
@@ -106,42 +85,6 @@ export function Policies() {
      setShowDetailsModal(true);
    };
 
-  // const handlePaymentComplete = async (success) => {
-  //   if (success && selectedPolicy) {
-  //     try {
-  //       // const result = await policyApi.purchasePolicy(
-  //       //   userId,
-  //       //   selectedPolicy.id
-  //       // );
-  //       // const result = await policyApi.purchasePolicy(
-  //       // selectedPolicy.id
-  //       // );
-  //       const result  = await policyApi.getUserPolicies(); // or navigate to My Policies
-
-
-
-  //       setUserPolicies((prev) => [...prev, result]);
-
-  //       await addNotification({
-  //         title: "Policy Purchased!",
-  //         message: `You have successfully purchased ${selectedPolicy.policyType}.`,
-  //         type: "success",
-  //       });
-  //     } catch (error) {
-  //       console.error("Purchase failed:", error);
-  //     }
-  //   } else if (!success) {
-  //     await addNotification({
-  //       title: "Payment Failed",
-  //       message: "Your payment could not be processed. Please try again.",
-  //       type: "error",
-  //     });
-  //   }
-
-  //   setShowPaymentModal(false);
-  //   setSelectedPolicy(null);
-  // };
-
   const handlePaymentComplete = async (success) => {
   if (success && selectedPolicy) {
     try {
@@ -180,39 +123,45 @@ export function Policies() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          Insurance Policies
+  <div className="min-h-screen flex flex-col bg-gray-50">
+    <Navbar />
+
+    {/* Hero Section */}
+    <section className="bg-gradient-to-br from-[#1A73E8] to-[#34A853] text-white py-16 px-4">
+      <div className="max-w-7xl mx-auto text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          Explore Insurance Policies
         </h1>
-        <p className="text-gray-500">
-          Browse and purchase insurance plans
+        <p className="text-lg opacity-90 max-w-2xl mx-auto">
+          Secure your future with flexible, affordable, and trusted coverage plans.
         </p>
       </div>
+    </section>
 
-      {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-        <div className="flex flex-col lg:flex-row gap-4">
+    {/* Filters Section */}
+    <section className="py-8 px-4">
+      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+          
           {/* Search */}
-          <div className="relative flex-1">
+          <div className="relative w-full lg:w-1/2">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search policies..."
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1A73E8] outline-none"
             />
           </div>
 
-          {/* Type filter */}
-          <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-gray-400" />
+          {/* Type Filter */}
+          <div className="flex items-center gap-2 w-full lg:w-auto">
+            <Filter className="h-5 w-5 text-gray-500" />
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
-              className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1A73E8] outline-none bg-white"
             >
               {policyTypes.map((type) => (
                 <option key={type} value={type}>
@@ -223,68 +172,94 @@ export function Policies() {
           </div>
         </div>
       </div>
+    </section>
 
-      {/* Policies Grid */}
-      {filteredPolicies.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-          <Shield className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            No policies found
-          </h3>
-          <p className="text-gray-500">
-            Try adjusting your search criteria
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPolicies.map((policy) => (
-            <PolicyCard
-              key={policy.id}
-              policy={policy}
-              isPurchased={isPurchased(policy.id)}
-              onPurchase={() => handlePurchase(policy)}
-              onViewDetails={() => handleViewDetails(policy)}
-            />
-          ))}
-        </div>
-      )}
+    {/* Policies Grid */}
+    <section className="pb-16 px-4">
+      <div className="max-w-7xl mx-auto">
 
-      {/* Details Modal */}
-      {showDetailsModal && selectedPolicy && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full relative">
-            <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-              onClick={() => setShowDetailsModal(false)}
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-bold mb-2">{selectedPolicy.name || selectedPolicy.id}</h2>
-            <p className="text-gray-600 mb-4">{selectedPolicy.description}</p>
-            {/* <p className="text-sm text-gray-500 mb-2">Duration: {selectedPolicy.durationInMonths} Months</p> */}
-            <p className="text-sm text-gray-500 mb-2">Coverage: ₹{selectedPolicy.coverageAmount?.toLocaleString()}</p>
-            <p className="text-sm text-gray-500 mb-2">Premium: ₹{selectedPolicy.premiumAmount}/mo</p>
-            <div className="mt-4">
-              <button
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                onClick={() => setShowDetailsModal(false)}
-              >
-                Close
-              </button>
-            </div>
+        {filteredPolicies.length === 0 ? (
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-16 text-center">
+            <Shield className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No policies found
+            </h3>
+            <p className="text-gray-500">
+              Try adjusting your search or filter criteria.
+            </p>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPolicies.map((policy) => (
+              <div
+                key={policy.id}
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 border border-gray-100"
+              >
+                <PolicyCard
+                  policy={policy}
+                  isPurchased={isPurchased(policy.id)}
+                  onPurchase={() => handlePurchase(policy)}
+                  onViewDetails={() => handleViewDetails(policy)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
 
-      {/* Payment Modal */}
-      <PaymentModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        policy={selectedPolicy}
-        onPaymentComplete={handlePaymentComplete}
-      />
-    </div>
-  );
+    {/* Details Modal */}
+    {showDetailsModal && selectedPolicy && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full relative animate-fadeIn">
+          <button
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-xl"
+            onClick={() => setShowDetailsModal(false)}
+          >
+            &times;
+          </button>
+
+          <h2 className="text-2xl font-bold mb-3 text-[#1A73E8]">
+            {selectedPolicy.name || selectedPolicy.id}
+          </h2>
+
+          <p className="text-gray-600 mb-4">
+            {selectedPolicy.description}
+          </p>
+
+          <div className="space-y-2 text-gray-600">
+            <p>
+              <span className="font-semibold">Coverage:</span> ₹
+              {selectedPolicy.coverageAmount?.toLocaleString()}
+            </p>
+            <p>
+              <span className="font-semibold">Premium:</span> ₹
+              {selectedPolicy.premiumAmount}/month
+            </p>
+          </div>
+
+          <button
+            className="mt-6 w-full bg-gradient-to-r from-[#1A73E8] to-[#34A853] text-white py-2.5 rounded-xl hover:opacity-90 transition"
+            onClick={() => setShowDetailsModal(false)}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* Payment Modal */}
+    <PaymentModal
+      isOpen={showPaymentModal}
+      onClose={() => setShowPaymentModal(false)}
+      policy={selectedPolicy}
+      onPaymentComplete={handlePaymentComplete}
+    />
+
+    <Footer/>
+  </div>
+);
+
 }
 
 export default Policies;

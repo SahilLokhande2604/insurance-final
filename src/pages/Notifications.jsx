@@ -98,7 +98,7 @@ export function Notifications() {
         </div>
       ) : (
         <div className="space-y-4">
-          {notifications.map((notification) => (
+          {/* {notifications.map((notification) => (
             <div
               key={notification.id}
               onClick={() =>
@@ -157,7 +157,27 @@ export function Notifications() {
                 </div>
               </div>
             </div>
-          ))}
+          ))} */}
+
+          {notifications.map((notification) => (
+  <div
+    key={notification.id}
+    className="bg-white rounded-xl shadow-sm border p-6"
+  >
+    <h3 className="font-semibold text-gray-900 mb-1">
+      {notification.type?.toUpperCase()}
+    </h3>
+
+    <p className="text-sm text-gray-600 mb-2">
+      {notification.message}
+    </p>
+
+    <p className="text-xs text-gray-400">
+      Status: {notification.status}
+    </p>
+  </div>
+))}
+
         </div>
       )}
     </div>

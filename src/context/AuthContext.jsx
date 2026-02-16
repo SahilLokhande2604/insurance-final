@@ -27,6 +27,8 @@ export function AuthProvider({ children }) {
             console.warn('Token expired, clearing auth data');
             localStorage.removeItem(STORAGE_KEYS.USER);
             localStorage.removeItem(STORAGE_KEYS.TOKEN);
+            localStorage.removeItem('username');
+            localStorage.removeItem('role');
             setUser(null);
           } else {
             const userData = JSON.parse(storedUser);
@@ -102,6 +104,8 @@ export function AuthProvider({ children }) {
       setUser(null);
       localStorage.removeItem(STORAGE_KEYS.USER);
       localStorage.removeItem(STORAGE_KEYS.TOKEN);
+      localStorage.removeItem('username');
+      localStorage.removeItem('role');
       setIsLoading(false);
     }
   };

@@ -42,7 +42,7 @@ export function Sidebar({ isOpen, onClose }) {
 
   return (
     <>
-      {/* Mobile backdrop */}
+      Mobile backdrop
       {isOpen && (
         <div
           className="fixed inset-0 z-50 bg-black/50 lg:hidden"
@@ -52,76 +52,81 @@ export function Sidebar({ isOpen, onClose }) {
 
       {/* Sidebar */}
       <aside
-        className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        )}
-      >
-        {/* Logo */}
-        <div className="flex h-16 items-center justify-between px-6 border-b border-gray-200">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-              <Shield className="h-5 w-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">
-              SecureLife
-            </span>
-          </Link>
-          <button
-            onClick={onClose}
-            className="lg:hidden p-1 text-gray-500 hover:text-gray-700"
-          >
-            <X className="h-6 w-6" />
-          </button>
-        </div>
+  className={cn(
+    "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-100 shadow-sm transform transition-transform duration-300 lg:translate-x-0",
+    isOpen ? "translate-x-0" : "-translate-x-full"
+  )}
+>
+  {/* Logo Section */}
+  <div className="flex h-16 items-center justify-between px-6 border-b border-gray-100">
+    <Link to="/" className="flex items-center gap-3">
+      <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#1A73E8] to-[#34A853] flex items-center justify-center shadow-md">
+        <Shield className="h-5 w-5 text-white" />
+      </div>
+      <span className="text-lg font-bold bg-gradient-to-r from-[#1A73E8] to-[#34A853] bg-clip-text text-transparent">
+        SecureLife
+      </span>
+    </Link>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                onClick={onClose}
-                className={cn(
-                  'flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
-                  isActive
-                    ? 'bg-indigo-50 text-indigo-700'
-                    : 'text-gray-700 hover:bg-gray-100'
-                )}
-              >
-                <item.icon
-                  className={cn(
-                    'h-5 w-5',
-                    isActive ? 'text-indigo-600' : 'text-gray-400'
-                  )}
-                />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+    <button
+      onClick={onClose}
+      className="lg:hidden p-1 text-gray-500 hover:text-gray-700"
+    >
+      <X className="h-6 w-6" />
+    </button>
+  </div>
 
-        {/* User info at bottom */}
-        <div className="p-4 border-t border-gray-200">
-          <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg">
-            <div className="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center">
-              <span className="text-sm font-bold text-white">
-                {user?.name?.charAt(0).toUpperCase()}
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
-                {user?.name}
-              </p>
-              <p className="text-xs text-gray-500 truncate">
-                {user?.username}
-              </p>
-            </div>
-          </div>
-        </div>
-      </aside>
+  {/* Navigation */}
+  <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+    {navItems.map((item) => {
+      const isActive = location.pathname === item.href;
+
+      return (
+        <Link
+          key={item.name}
+          to={item.href}
+          onClick={onClose}
+          className={cn(
+            "group flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200",
+            isActive
+              ? "bg-gradient-to-r from-[#1A73E8]/10 to-[#34A853]/10 text-[#1A73E8] shadow-sm"
+              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+          )}
+        >
+          <item.icon
+            className={cn(
+              "h-5 w-5 transition-colors",
+              isActive
+                ? "text-[#1A73E8]"
+                : "text-gray-400 group-hover:text-gray-600"
+            )}
+          />
+          {item.name}
+        </Link>
+      );
+    })}
+  </nav>
+
+  {/* Bottom User Card */}
+  <div className="p-4 border-t border-gray-100">
+    <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#1A73E8] to-[#34A853] flex items-center justify-center shadow">
+        <span className="text-sm font-bold text-white">
+          {user?.name?.charAt(0).toUpperCase() || "?"}
+        </span>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-gray-900 truncate">
+          {user?.name}
+        </p>
+        <p className="text-xs text-gray-500 truncate">
+          {user?.username}
+        </p>
+      </div>
+    </div>
+  </div>
+</aside>
+
     </>
   );
 }
