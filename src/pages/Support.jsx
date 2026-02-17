@@ -43,18 +43,36 @@ export function Support() {
   //     setIsLoading(false);
   //   }
   // };
-  const fetchTickets = async () => {
+//   const fetchTickets = async () => {
+//   setIsLoading(true);
+//   try {
+//     const data = await supportApi.getTicketsByUser(user?.username);
+
+//     data.sort(
+//       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+//     );
+
+//     setTickets(data);
+//   } catch (error) {
+//     console.error(error);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
+const fetchTickets = async () => {
+  if (!user?.username) return;
+
   setIsLoading(true);
   try {
-    const data = await supportApi.getTicketsByUser(user?.username);
+    const data = await supportApi.getTicketsByUser(user.username);
 
-    data.sort(
+    const sorted = [...data].sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
 
-    setTickets(data);
+    setTickets(sorted);
   } catch (error) {
-    console.error(error);
+    console.error('Failed to fetch tickets:', error);
   } finally {
     setIsLoading(false);
   }

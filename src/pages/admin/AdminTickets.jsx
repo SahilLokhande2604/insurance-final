@@ -1,5 +1,90 @@
+// import { useState, useEffect } from 'react';
+// import { FileText, Filter, Search, User, Calendar } from 'lucide-react';
+// import { supportApi } from '../../api/supportApi';
+// import { TicketCard } from '../../components/TicketCard';
+
+// /**
+//  * AdminTickets Page
+//  * Admin view to see all support tickets
+//  */
+// export function AdminTickets() {
+//   // State
+//   const [tickets, setTickets] = useState([]);
+//   const [filteredTickets, setFilteredTickets] = useState([]);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [filterType, setFilterType] = useState('ALL');
+//   const [searchQuery, setSearchQuery] = useState('');
+
+//   // Fetch all tickets on mount
+//   useEffect(() => {
+//     fetchTickets();
+//   }, []);
+
+//   // Filter tickets when filter or search changes
+//   useEffect(() => {
+//     filterTickets();
+//   }, [tickets, filterType, searchQuery]);
+
+//   // Fetch tickets from API
+//   const fetchTickets = async () => {
+//   //   setIsLoading(true);
+//   //   try {
+//   //     const data = await supportApi.getAllTickets();
+//   //     setTickets(data);
+//   //   } catch (error) {
+//   //     console.error('Failed to fetch tickets:', error);
+//   //   } finally {
+//   //     setIsLoading(false);
+//   //   }
+//   // };
+//   const fetchTickets = async () => {
+//   setIsLoading(true);
+//   try {
+//     const data = await supportApi.getAllTickets();
+
+//     const sorted = [...data].sort(
+//       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+//     );
+
+//     setTickets(sorted);
+//   } catch (error) {
+//     console.error('Failed to fetch tickets:', error);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
+
+
+//   // Filter tickets based on type and search
+//   const filterTickets = () => {
+//     let filtered = [...tickets];
+
+//     // Filter by type
+//     if (filterType !== 'ALL') {
+//       filtered = filtered.filter(ticket => ticket.type === filterType);
+//     }
+
+//     // Filter by search query
+//     if (searchQuery.trim()) {
+//       const query = searchQuery.toLowerCase();
+//       filtered = filtered.filter(ticket =>
+//         ticket.subject.toLowerCase().includes(query) ||
+//         ticket.description.toLowerCase().includes(query) ||
+//         ticket.raisedBy.toLowerCase().includes(query) ||
+//         ticket.id.toString().includes(query)
+//       );
+//     }
+
+//     // Sort by creation date (newest first)
+//     filtered.sort((a, b) => 
+//       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+//     );
+
+//     setFilteredTickets(filtered);
+//   };
+
 import { useState, useEffect } from 'react';
-import { FileText, Filter, Search, User, Calendar } from 'lucide-react';
+import { FileText, Filter, Search, User } from 'lucide-react';
 import { supportApi } from '../../api/supportApi';
 import { TicketCard } from '../../components/TicketCard';
 
@@ -8,29 +93,33 @@ import { TicketCard } from '../../components/TicketCard';
  * Admin view to see all support tickets
  */
 export function AdminTickets() {
-  // State
   const [tickets, setTickets] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterType, setFilterType] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch all tickets on mount
+  // Fetch tickets on mount
   useEffect(() => {
     fetchTickets();
   }, []);
 
-  // Filter tickets when filter or search changes
+  // Filter whenever dependency changes
   useEffect(() => {
     filterTickets();
   }, [tickets, filterType, searchQuery]);
 
-  // Fetch tickets from API
+  // ✅ Correct fetch function (only ONE definition)
   const fetchTickets = async () => {
     setIsLoading(true);
     try {
       const data = await supportApi.getAllTickets();
-      setTickets(data);
+
+      const sorted = [...data].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      setTickets(sorted);
     } catch (error) {
       console.error('Failed to fetch tickets:', error);
     } finally {
@@ -38,33 +127,35 @@ export function AdminTickets() {
     }
   };
 
-  // Filter tickets based on type and search
+  // ✅ Properly defined filter function
   const filterTickets = () => {
     let filtered = [...tickets];
 
-    // Filter by type
     if (filterType !== 'ALL') {
       filtered = filtered.filter(ticket => ticket.type === filterType);
     }
 
-    // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(ticket =>
-        ticket.subject.toLowerCase().includes(query) ||
-        ticket.description.toLowerCase().includes(query) ||
-        ticket.raisedBy.toLowerCase().includes(query) ||
-        ticket.id.toString().includes(query)
+        ticket.subject?.toLowerCase().includes(query) ||
+        ticket.description?.toLowerCase().includes(query) ||
+        ticket.raisedBy?.toLowerCase().includes(query) ||
+        ticket.id?.toString().includes(query)
       );
     }
 
-    // Sort by creation date (newest first)
-    filtered.sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    filtered.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() -
+        new Date(a.createdAt).getTime()
     );
 
     setFilteredTickets(filtered);
   };
+
+
+
 
   return (
     <div className="space-y-6">
@@ -191,5 +282,6 @@ export function AdminTickets() {
     </div>
   );
 }
+
 
 export default AdminTickets;

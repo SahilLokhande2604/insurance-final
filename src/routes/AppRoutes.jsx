@@ -27,6 +27,7 @@ import { AdminPolicies } from '../pages/admin/AdminPolicies';
 import { AdminClaims } from '../pages/admin/AdminClaims';
 import { AdminPayments } from '../pages/admin/AdminPayments';
 import { AdminNotifications } from '../pages/admin/AdminNotifications';
+import { AdminTickets } from '../pages/admin/AdminTickets';
 
 function Unauthorized() {
   return (
@@ -129,7 +130,7 @@ export function AppRoutes() {
         <Route path="/admin/claims" element={<AdminClaims />} />
         <Route path="/admin/payments" element={<AdminPayments />} />
         <Route path="/admin/notifications" element={<AdminNotifications />} />
-        <Route path="/admin/settings" element={<AdminDashboard />} />
+        <Route path="/admin/support/tickets" element={<AdminTickets />} />
       </Route>
 
       {/* 404 */}
