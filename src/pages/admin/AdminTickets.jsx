@@ -87,6 +87,8 @@ import { useState, useEffect } from 'react';
 import { FileText, Filter, Search, User } from 'lucide-react';
 import { supportApi } from '../../api/supportApi';
 import { TicketCard } from '../../components/TicketCard';
+import { AdminTicketActionModal } from '../../components/AdminTicketActionModal';
+
 
 /**
  * AdminTickets Page
@@ -98,6 +100,15 @@ export function AdminTickets() {
   const [isLoading, setIsLoading] = useState(true);
   const [filterType, setFilterType] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const [selectedTicket, setSelectedTicket] = useState(null);
+const [actionType, setActionType] = useState(null);
+
+const handleAdminAction = (ticket, type) => {
+  setSelectedTicket(ticket);
+  setActionType(type);
+};
+
 
   // Fetch tickets on mount
   useEffect(() => {
@@ -267,19 +278,38 @@ export function AdminTickets() {
           {/* Tickets grid */}
           <div className="grid grid-cols-1 gap-4">
             {filteredTickets.map((ticket) => (
+              // <TicketCard
+              //   key={ticket.id}
+              //   ticket={ticket}
+              //   onClick={() => {
+              //     // Handle ticket click - could navigate to detail page
+              //     console.log('Ticket clicked:', ticket);
+              //   }}
+              // />
               <TicketCard
-                key={ticket.id}
-                ticket={ticket}
-                onClick={() => {
-                  // Handle ticket click - could navigate to detail page
-                  console.log('Ticket clicked:', ticket);
-                }}
-              />
+  key={ticket.id}
+  ticket={ticket}
+  isAdmin={true}
+  onAction={handleAdminAction}
+/>
+
             ))}
           </div>
         </div>
       )}
+
+      {selectedTicket && (
+  <AdminTicketActionModal
+    ticket={selectedTicket}
+    actionType={actionType}
+    onClose={() => setSelectedTicket(null)}
+    onSuccess={fetchTickets}
+  />
+)}
+
     </div>
+
+    
   );
 }
 

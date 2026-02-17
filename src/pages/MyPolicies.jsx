@@ -11,14 +11,30 @@ import {
 import { policyApi } from "../api/policyApi.js";
 import { cn } from "../utils/cn.js";
 import { useAuth } from "../context/AuthContext.jsx";
+import { PolicyChangeModal } from "../components/PolicyChangeModal.jsx";
+import {supportApi} from "../api/supportApi.js";
 
 export function MyPolicies() {
   const [userPolicies, setUserPolicies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
    const { user } = useAuth();
 
+   const [showChangeModal, setShowChangeModal] = useState(false);
+// const [userPolicies, setUserPolicies] = useState([]);
+
+
 
   // const username = localStorage.getItem("username"); // Ensure this is set on login
+
+  useEffect(() => {
+  const fetchPolicies = async () => {
+    const data = await policyApi.getMyPolicies(user.username);
+    setUserPolicies(data);
+  };
+
+  fetchPolicies();
+}, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -339,6 +355,21 @@ export function MyPolicies() {
                   </div>
 
                 </div>
+                <button
+  onClick={() => setShowChangeModal(true)}
+  className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+>
+  Request Policy Change
+</button>
+<PolicyChangeModal
+  isOpen={showChangeModal}
+  onClose={() => setShowChangeModal(false)}
+  policies={userPolicies}
+  onSuccess={() => {
+    alert("Policy change request submitted");
+  }}
+/>
+
               </div>
             ))}
 

@@ -9,7 +9,8 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { useNotifications } from "../context/NotificationContext.jsx";
 import { PolicyCard } from "../components/PolicyCard.jsx";
 import { PaymentModal } from "../components/PaymentModal.jsx";
-import { getUserFromToken } from "../utils/jwtUtils";
+
+
 export function Policies() {
   const { user } = useAuth();
   const { addNotification } = useNotifications();
@@ -22,6 +23,7 @@ export function Policies() {
   const [selectedPolicy, setSelectedPolicy] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  
 
   const policyTypes = [
     "all",
