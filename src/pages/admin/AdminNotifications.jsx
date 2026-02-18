@@ -20,8 +20,8 @@ export function AdminNotifications() {
   const [sentCount, setSentCount] = useState(0);
 
   const [formData, setFormData] = useState({
-    userId: '',
-    title: '',
+    username: '',
+    // title: '',
     message: '',
     type: 'info',
   });
@@ -46,15 +46,26 @@ export function AdminNotifications() {
     setIsSending(true);
 
     try {
-      await notificationApi.sendNotification(formData);
+      await notificationApi.sendNotificationToUser(formData);
       setSentCount((prev) => prev + 1);
       setShowForm(false);
       setFormData({
-        userId: '',
-        title: '',
+        username: '',
+        // title: '',
         message: '',
         type: 'info',
-      });
+      },
+    
+    await notificationApi.sendNotificationToUser(
+  selectedUsername,
+  {
+    // title: formData.title,
+    message: formData.message,
+    type: formData.type
+  }
+)
+
+);
     } catch (error) {
       console.error('Failed to send notification:', error);
     } finally {
@@ -138,9 +149,9 @@ export function AdminNotifications() {
             >
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center">
-                  <span className="text-sm font-bold text-white">
+                  {/* <span className="text-sm font-bold text-white">
                     {user.name.charAt(0).toUpperCase()}
-                  </span>
+                  </span> */}
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">{user.name}</p>
@@ -150,7 +161,7 @@ export function AdminNotifications() {
 
               <button
                 onClick={() => {
-                  setFormData({ ...formData, userId: user.id });
+                  setFormData({ ...formData, username: user.username });
                   setShowForm(true);
                 }}
                 className="px-3 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
@@ -175,9 +186,9 @@ export function AdminNotifications() {
               Recipient
             </label>
             <select
-              value={formData.userId}
+              value={formData.username}
               onChange={(e) =>
-                setFormData({ ...formData, userId: e.target.value })
+                setFormData({ ...formData, username: e.target.value })
               }
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg"
               required

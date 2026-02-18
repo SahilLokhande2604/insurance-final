@@ -173,7 +173,23 @@ export const notificationApi = {
         }
       }
     );
-  }
+  },
+
+  async sendNotificationToUser(username, data) {
+  const response = await axiosInstance.post(
+    `/api/admin/notifications/send-to-user?username=${username}`,
+    data
+  );
+  return response.data;
+},
+
+async getAdminNotifications() {
+  const response = await axiosInstance.get(
+    "/api/admin/notifications"
+  );
+  return response.data;
+},
+
 };
 
 export default notificationApi;
