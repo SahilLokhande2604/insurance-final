@@ -395,18 +395,18 @@ export function AdminClaims() {
         )
       );
 
-      await notificationApi.sendNotification({
-        userId: updatedClaim.customerId,
-        title:
-          status === "APPROVED"
-            ? "Claim Approved 🎉"
-            : "Claim Rejected",
-        message:
-          status === "APPROVED"
-            ? `Your claim for ${updatedClaim.policyName} has been approved.`
-            : `Your claim for ${updatedClaim.policyName} has been rejected.`,
-        type: status === "APPROVED" ? "success" : "error",
-      });
+      // await notificationApi.sendNotification({
+      //   userId: updatedClaim.customerId,
+      //   title:
+      //     status === "APPROVED"
+      //       ? "Claim Approved 🎉"
+      //       : "Claim Rejected",
+      //   message:
+      //     status === "APPROVED"
+      //       ? `Your claim for ${updatedClaim.policyName} has been approved.`
+      //       : `Your claim for ${updatedClaim.policyName} has been rejected.`,
+      //   type: status === "APPROVED" ? "success" : "error",
+      // });
     } catch (error) {
       console.error("Process failed:", error);
     } finally {

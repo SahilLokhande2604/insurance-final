@@ -9,7 +9,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { useNotifications } from "../context/NotificationContext";
+// import { useNotifications } from "../context/NotificationContext";
 import { claimApi } from "../api/claimApi";
 import { policyApi } from "../api/policyApi";
 import { Modal } from "../components/Modal";
@@ -20,7 +20,7 @@ import { cn } from "../utils/cn";
 // console.log("Logged in user:", loggedInUser);
 export function Claims() {
   const { user } = useAuth();
-  const { addNotification } = useNotifications();
+  // const { addNotification } = useNotifications();
 
   const [claims, setClaims] = useState([]);
   const [userPolicies, setUserPolicies] = useState([]);
@@ -129,11 +129,11 @@ export function Claims() {
         ...prev,
       ]);
 
-      await addNotification({
-        title: "Claim Submitted",
-        message: `Your claim for ${selectedPolicy.policy.name} has been submitted.`,
-        type: "info",
-      });
+      // await addNotification({
+      //   title: "Claim Submitted",
+      //   message: `Your claim for ${selectedPolicy.policy.name} has been submitted.`,
+      //   type: "info",
+      // });
 
       setShowClaimForm(false);
       setFormData({
