@@ -16,13 +16,13 @@ function getNotificationIcon(type) {
     case 'policy':
       return <Info className="h-6 w-6 text-blue-500" />;
     case 'payment':
-      return <CheckCircle className="h-6 w-6 text-green-500" />;
+      return <CheckCircle className="h-5 w-5 text-green-500" />;
     case 'claim':
       return <AlertTriangle className="h-6 w-6 text-yellow-500" />;
     case 'user':
-      return <Bell className="h-6 w-6 text-indigo-500" />;
+      return <Bell className="h-8 w-8 text-indigo-500" />;
     default:
-      return <Info className="h-6 w-6 text-gray-500" />;
+      return <Info className="h-8 w-8 text-gray-500" />;
   }
 }
 

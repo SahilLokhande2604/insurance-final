@@ -62,11 +62,11 @@ export function Policies() {
   // ✅ MATCHING BACKEND FIELDS
   const filteredPolicies = policies.filter((policy) => {
     const matchesSearch =
-      policy.policyType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      policy.id;
+      policy.policyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      policy.policyId;
 
     const matchesType =
-      selectedType === "all" || policy.policyType === selectedType;
+      selectedType === "all" || policy.policyName === selectedType;
 
     return matchesSearch && matchesType;
   });

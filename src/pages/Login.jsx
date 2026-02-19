@@ -66,15 +66,6 @@ export function Login() {
             <p className="text-gray-600">Sign in to your account to continue</p>
           </div>
 
-          {/* Demo credentials */}
-          <div className="mb-6 p-4 bg-indigo-50 rounded-lg border border-indigo-100">
-            <p className="text-sm font-medium text-indigo-900 mb-2">Demo Credentials:</p>
-            <div className="space-y-1 text-sm text-indigo-700">
-              <p><span className="font-medium">Admin:</span> admin / password</p>
-              <p><span className="font-medium">User:</span> user / 123456</p>
-            </div>
-          </div>
-
           {/* Error message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">

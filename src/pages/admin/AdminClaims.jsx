@@ -345,7 +345,7 @@ import {
   Loader2,
   Search,
   Filter,
-  DollarSign,
+  IndianRupeeIcon,
 } from "lucide-react";
 import { claimApi } from "../../api/claimApi";
 import { policyApi } from "../../api/policyApi";
@@ -495,9 +495,9 @@ export function AdminClaims() {
           label="Rejected"
         />
         <StatCard
-          icon={DollarSign}
+          icon={IndianRupeeIcon}
           color="indigo"
-          value={`$${totalAmount.toLocaleString()}`}
+          value={`₹${totalAmount.toLocaleString()}`}
           label="Total Claimed"
         />
       </div>
@@ -592,7 +592,7 @@ export function AdminClaims() {
                     </td>
 
                     <td className="px-6 py-4 font-semibold text-gray-900">
-                      ${claim.amount.toLocaleString()}
+                      ₹ {claim.amount.toLocaleString()}
                     </td>
 
                     <td className="px-6 py-4">

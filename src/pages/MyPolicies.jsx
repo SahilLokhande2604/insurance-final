@@ -225,8 +225,8 @@ export function MyPolicies() {
 
       <>
         {/* Stats Section */}
-        <section className="px-4">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <section className="px-2">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-5">
 
             <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition">
               <p className="text-sm text-gray-500">Total Policies</p>
@@ -254,8 +254,15 @@ export function MyPolicies() {
 
         {/* Policies List */}
         <section className="px-4 pb-16">
-          <div className="max-w-7xl mx-auto grid gap-8">
-
+          <div className="max-w-7xl mx-auto grid gap-5 ">
+                        <div className="flex justify-end mt-0">
+  <button
+    onClick={() => setShowChangeModal(true)}
+    className="bg-indigo-600 text-white px-6 py-2 rounded-lg w-72 hover:bg-indigo-700 transition"
+  >
+    Request Policy Change
+  </button>
+</div>
             {userPolicies.map((up, index) => (
               <div
                 key={up.id ?? index}
@@ -355,12 +362,7 @@ export function MyPolicies() {
                   </div>
 
                 </div>
-                <button
-  onClick={() => setShowChangeModal(true)}
-  className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
->
-  Request Policy Change
-</button>
+  
 <PolicyChangeModal
   isOpen={showChangeModal}
   onClose={() => setShowChangeModal(false)}

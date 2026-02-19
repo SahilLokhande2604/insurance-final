@@ -609,7 +609,7 @@ export function Dashboard() {
                 <div key={item.label}>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600">{item.label}</span>
-                    <span className="font-medium">{percentage}%</span>
+                    <span className="font-medium">{item.value}/{totalClaims}</span>
                   </div>
 
                   <div className="w-full bg-gray-100 rounded-full h-3">

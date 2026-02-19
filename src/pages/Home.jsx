@@ -4,6 +4,8 @@ import { PolicyCard } from '../components/PolicyCard';
 import { ArrowRight, CheckCircle, Shield, Clock, Award } from 'lucide-react';
 import Navbar from '../components/NavbarNew';
 import Footer from '../components/FooterNew';
+import { useEffect, useState } from "react";
+import policyApi from "../api/policyApi";
 
 // Dummy policies data (replace with real data or import)
 const policies = [
@@ -34,6 +36,24 @@ const policies = [
 ];
 
 export default function Home() {
+const [policies, setPolicies] = useState([]);
+// Fetch policies from backend
+  useEffect(() => {
+    const fetchPolicies = async () => {
+      try {
+        const data = await policyApi.getAllPolicies();
+        setPolicies(data);
+      } catch (err) {
+        console.error("Error fetching policies:", err);
+        setError("Failed to load policies");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPolicies();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -118,10 +138,21 @@ export default function Home() {
               Comprehensive protection plans for every need
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {policies.map((policy) => (
-              <PolicyCard key={policy.id} policy={policy} />
-            ))}
+          <div className="grid md:grid-cols-4 lg:grid-cols-4 gap-6">
+            {/* Policies Grid */}
+          
+            {/* <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"> */}
+              {policies.length > 0 ? (
+                policies.map((policy) => (
+                  <PolicyCard key={policy.id} policy={policy} />
+                ))
+              ) : (
+                <div className="col-span-full text-center text-gray-500">
+                  No policies available
+                </div>
+              )}
+            {/* </div> */}
+          
           </div>
         </div>
       </section>
@@ -207,3 +238,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -49,9 +49,9 @@ export function PolicyCard({
             <h3 className="font-semibold text-gray-900">
               {policy.id}
             </h3>
-            {/* <p className="text-sm text-gray-500">
-              {policy.durationInMonths ? `${policy.durationInMonths} Months` : 'Duration not specified'}
-            </p> */}
+            <p className="text-sm text-gray-500">
+              {policy.policyName || 'Unnamed Policy'}
+            </p>
           </div>
         </div>
 

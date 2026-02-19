@@ -1007,7 +1007,7 @@ export function AdminPolicies() {
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <p className="text-sm text-gray-500">Average Premium</p>
           <p className="text-3xl font-bold text-green-600 mt-2">
-            $
+            ₹
             {policies.length
               ? Math.round(
                   policies.reduce(
@@ -1110,7 +1110,7 @@ export function AdminPolicies() {
                     <div
                       className="h-full bg-gradient-to-r from-[#1A73E8] to-[#34A853]"
                       style={{
-                        width: `${Math.min(
+                        width: `₹{Math.min(
                           (policy.coverageAmount / 1000000) * 100,
                           100
                         )}%`,
@@ -1124,14 +1124,14 @@ export function AdminPolicies() {
                   <div>
                     <p className="text-xs text-gray-500">Coverage</p>
                     <p className="font-semibold text-gray-900">
-                      ${policy.coverageAmount.toLocaleString()}
+                      ₹ {policy.coverageAmount.toLocaleString()}
                     </p>
                   </div>
 
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Premium</p>
                     <p className="font-semibold text-indigo-600 text-lg">
-                      ${policy.premiumAmount}/mo
+                      ₹ {policy.premiumAmount}/mo
                     </p>
                   </div>
                 </div>

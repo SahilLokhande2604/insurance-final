@@ -6,7 +6,7 @@ import {
   XCircle,
   Plus,
   Loader2,
-  DollarSign,
+  IndianRupeeIcon,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 // import { useNotifications } from "../context/NotificationContext";
@@ -419,8 +419,8 @@ export function Claims() {
                     <div className="flex items-center gap-4 flex-wrap">
 
                       <span className="text-sm text-gray-500 flex items-center gap-1">
-                        <DollarSign className="h-4 w-4" />
-                        ₹{claim.amount?.toLocaleString()}
+                        ₹
+                        {claim.amount?.toLocaleString()}
                       </span>
 
                       <span className="text-sm text-gray-500">

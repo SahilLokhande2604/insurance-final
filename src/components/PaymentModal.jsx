@@ -185,7 +185,7 @@ export function PaymentModal({
             </div>
             <div className="text-right">
               <p className="text-lg font-bold text-indigo-600">
-                ₹{policy.premium}
+                ₹{policy.premiumAmount}
               </p>
               <p className="text-xs text-gray-500">per month</p>
             </div>
